@@ -405,7 +405,7 @@ type FindByUsernameResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Mobile        string                 `protobuf:"bytes,3,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
 	Avatar        string                 `protobuf:"bytes,4,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -455,9 +455,9 @@ func (x *FindByUsernameResponse) GetUsername() string {
 	return ""
 }
 
-func (x *FindByUsernameResponse) GetMobile() string {
+func (x *FindByUsernameResponse) GetPassword() string {
 	if x != nil {
-		return x.Mobile
+		return x.Password
 	}
 	return ""
 }
@@ -559,7 +559,8 @@ func (*SendSmsResponse) Descriptor() ([]byte, []int) {
 
 type ChangeAvatarRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Avatar        string                 `protobuf:"bytes,1,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -592,6 +593,13 @@ func (x *ChangeAvatarRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ChangeAvatarRequest.ProtoReflect.Descriptor instead.
 func (*ChangeAvatarRequest) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ChangeAvatarRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
 }
 
 func (x *ChangeAvatarRequest) GetAvatar() string {
@@ -665,18 +673,19 @@ const file_user_proto_rawDesc = "" +
 	"\x06mobile\x18\x03 \x01(\tR\x06mobile\x12\x16\n" +
 	"\x06avatar\x18\x04 \x01(\tR\x06avatar\"3\n" +
 	"\x15FindByUsernameRequest\x12\x1a\n" +
-	"\busername\x18\x01 \x01(\tR\busername\"|\n" +
+	"\busername\x18\x01 \x01(\tR\busername\"\x80\x01\n" +
 	"\x16FindByUsernameResponse\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x16\n" +
-	"\x06mobile\x18\x03 \x01(\tR\x06mobile\x12\x16\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x16\n" +
 	"\x06avatar\x18\x04 \x01(\tR\x06avatar\"@\n" +
 	"\x0eSendSmsRequest\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x16\n" +
 	"\x06mobile\x18\x02 \x01(\tR\x06mobile\"\x11\n" +
-	"\x0fSendSmsResponse\"-\n" +
+	"\x0fSendSmsResponse\"E\n" +
 	"\x13ChangeAvatarRequest\x12\x16\n" +
-	"\x06avatar\x18\x01 \x01(\tR\x06avatar\"\x16\n" +
+	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x16\n" +
+	"\x06avatar\x18\x02 \x01(\tR\x06avatar\"\x16\n" +
 	"\x14ChangeAvatarResponse2\x8f\x03\n" +
 	"\x04User\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x129\n" +

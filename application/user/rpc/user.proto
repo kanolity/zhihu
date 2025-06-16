@@ -50,7 +50,7 @@ message FindByUsernameRequest {
 message FindByUsernameResponse {
   int64 userId = 1;
   string username = 2;
-  string mobile = 3;
+  string password = 3;
   string avatar = 4;
 }
 
@@ -62,6 +62,7 @@ message SendSmsRequest {
 message SendSmsResponse {
 }
 message   ChangeAvatarRequest{
-  string avatar=1;
+  int64 userId = 1;
+  string avatar = 2;
 }
 message ChangeAvatarResponse{}

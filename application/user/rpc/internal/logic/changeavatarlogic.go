@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"time"
+
 	"go_code/zhihu/application/user/rpc/internal/svc"
 	"go_code/zhihu/application/user/rpc/types/user"
 
@@ -23,7 +26,18 @@ func NewChangeAvatarLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Chan
 }
 
 func (l *ChangeAvatarLogic) ChangeAvatar(in *user.ChangeAvatarRequest) (*user.ChangeAvatarResponse, error) {
-	//userId, err := l.ctx.Value("userId").(json.Number).Int64()
+	existingUser, err := l.svcCtx.UserModel.FindOne(l.ctx, uint64(in.UserId))
+	if err != nil {
+		return nil, fmt.Errorf("查询用户失败: %w", err)
+	}
+
+	existingUser.Avatar = in.Avatar
+	existingUser.Mtime = time.Now()
+
+	err = l.svcCtx.UserModel.Update(l.ctx, existingUser)
+	if err != nil {
+		return nil, fmt.Errorf("头像更新失败: %w", err)
+	}
 
 	return &user.ChangeAvatarResponse{}, nil
 }
