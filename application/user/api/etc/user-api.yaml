@@ -12,7 +12,6 @@ UserRPC:
     Hosts:
       - 127.0.0.1:2379
     Key: user.rpc
-  NonBlock: true
 BizRedis:
   Host: 127.0.0.1:6379
   Pass:

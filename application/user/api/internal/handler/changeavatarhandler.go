@@ -18,11 +18,11 @@ func ChangeAvatarHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewChangeAvatarLogic(r.Context(), svcCtx)
-		err := l.ChangeAvatar(&req)
+		resp, err := l.ChangeAvatar(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
-			httpx.Ok(w)
+			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
 	}
 }

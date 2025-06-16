@@ -90,6 +90,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	regMsg, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{
 		Username: req.Username,
 		Mobile:   mobile,
+		Password: req.Password,
 	})
 	if err != nil {
 		logx.Errorf("Register error: %v", err)

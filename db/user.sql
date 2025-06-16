@@ -9,6 +9,7 @@ CREATE TABLE `user`
     `mobile`      varchar(128)        NOT NULL DEFAULT '' COMMENT '手机号',
     `create_time` timestamp           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+    `password` varchar(32) not null default '' comment '密码',
     PRIMARY KEY (`id`),
     KEY `ix_update_time` (`update_time`),
     UNIQUE KEY `uk_mobile` (`mobile`)

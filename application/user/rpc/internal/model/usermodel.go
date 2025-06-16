@@ -28,7 +28,6 @@ func NewUserModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) Us
 		defaultUserModel: newUserModel(conn, c, opts...),
 	}
 }
-
 func (m *defaultUserModel) FindByUsername(ctx context.Context, username string) (*User, error) {
 	var user User
 	err := m.QueryRowNoCacheCtx(ctx, &user,

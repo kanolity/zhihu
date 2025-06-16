@@ -49,6 +49,7 @@ type (
 		Username string    `db:"username"` // 用户名
 		Avatar   string    `db:"avatar"`   // 头像
 		Mobile   string    `db:"mobile"`   // 手机号
+		Password string    `db:"password"` // 密码
 	}
 )
 
@@ -88,8 +89,8 @@ func (m *defaultUserModel) FindOne(ctx context.Context, id uint64) (*User, error
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
 	beyondUserUserIdKey := fmt.Sprintf("%s%v", cacheBeyondUserUserIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Mtime, data.Ctime, data.Username, data.Avatar, data.Mobile)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Mtime, data.Ctime, data.Username, data.Avatar, data.Mobile, data.Password)
 	}, beyondUserUserIdKey)
 	return ret, err
 }
@@ -98,7 +99,7 @@ func (m *defaultUserModel) Update(ctx context.Context, data *User) error {
 	beyondUserUserIdKey := fmt.Sprintf("%s%v", cacheBeyondUserUserIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.Mtime, data.Ctime, data.Username, data.Avatar, data.Mobile, data.Id)
+		return conn.ExecCtx(ctx, query, data.Mtime, data.Ctime, data.Username, data.Avatar, data.Mobile, data.Password, data.Id)
 	}, beyondUserUserIdKey)
 	return err
 }

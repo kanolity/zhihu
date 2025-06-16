@@ -110,6 +110,7 @@ func getActivationCache(mobile string, rds *redis.Redis) (string, error) {
 // saveActivationCache 将验证码存入缓存
 func saveActivationCache(mobile, code string, rds *redis.Redis) error {
 	key := fmt.Sprintf(prefixActivation, mobile)
+	fmt.Println(key)
 	return rds.Setex(key, code, expireActivation)
 }
 
