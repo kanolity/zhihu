@@ -36,6 +36,7 @@ type (
 	ChangeAvatarRequest {
 		Avatar string `json:"avatar"`
 	}
+	ChangeAvatarResponse  {}
 )
 
 @server (
@@ -62,6 +63,6 @@ service user-api {
 	get /info returns (UserInfoResponse)
 
 	@handler ChangeAvatar
-	put /change_avatar (ChangeAvatarRequest)
+	put /change_avatar (ChangeAvatarRequest) returns (ChangeAvatarResponse)
 }
 

@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 
 	"go_code/zhihu/application/user/rpc/internal/svc"
 	"go_code/zhihu/application/user/rpc/types/user"
@@ -24,7 +25,7 @@ func NewChangeAvatarLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Chan
 }
 
 func (l *ChangeAvatarLogic) ChangeAvatar(in *user.ChangeAvatarRequest) (*user.ChangeAvatarResponse, error) {
-	// todo: add your logic here and delete this line
+	userId, err := l.ctx.Value("userId").(json.Number).Int64()
 
 	return &user.ChangeAvatarResponse{}, nil
 }

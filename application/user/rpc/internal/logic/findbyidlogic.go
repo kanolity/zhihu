@@ -24,7 +24,18 @@ func NewFindByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindById
 }
 
 func (l *FindByIdLogic) FindById(in *user.FindByIdRequest) (*user.FindByIdResponse, error) {
-	// todo: add your logic here and delete this line
+	user1, err := l.svcCtx.UserModel.FindOne(l.ctx, uint64(in.UserId))
+	if err != nil {
+		logx.Errorf("FindById userId %s err:%v", in.UserId, err)
+		return nil, err
+	}
+	if user1 == nil {
+		return &user.FindByIdResponse{}, nil
+	}
 
-	return &user.FindByIdResponse{}, nil
+	return &user.FindByIdResponse{
+		Username: user1.Username,
+		UserId:   int64(user1.Id),
+		Avatar:   user1.Avatar,
+	}, nil
 }

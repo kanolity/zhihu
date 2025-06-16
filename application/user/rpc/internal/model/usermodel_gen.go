@@ -33,6 +33,8 @@ type (
 		FindOne(ctx context.Context, id uint64) (*User, error)
 		Update(ctx context.Context, data *User) error
 		Delete(ctx context.Context, id uint64) error
+		FindByUsername(ctx context.Context, username string) (*User, error)
+		FindByMobile(ctx context.Context, mobile string) (*User, error)
 	}
 
 	defaultUserModel struct {
