@@ -6,6 +6,9 @@ info (
 )
 
 type (
+	UploadCoverRequest {
+		Cover string `json:"cover"`
+	}
 	UploadCoverResponse {
 		CoverUrl string `json:"cover_url"`
 	}
@@ -26,7 +29,7 @@ type (
 )
 service article-api {
 	@handler UploadCoverHandler
-	post /upload/cover returns (UploadCoverResponse)
+	post /upload/cover (UploadCoverRequest) returns (UploadCoverResponse)
 
 	@handler PublishHandler
 	post /publish (PublishRequest) returns (PublishResponse)

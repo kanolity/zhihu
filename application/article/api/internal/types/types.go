@@ -14,6 +14,10 @@ type PublishResponse struct {
 	ArticleId int64 `json:"article_id"`
 }
 
+type UploadCoverRequest struct {
+	Cover string `json:"cover"`
+}
+
 type UploadCoverResponse struct {
 	CoverUrl string `json:"cover_url"`
 }

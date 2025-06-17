@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/zeromicro/go-zero/rest/httpx"
+	"go_code/zhihu/pkg/xcode"
 
 	"go_code/zhihu/application/article/api/internal/config"
 	"go_code/zhihu/application/article/api/internal/handler"
@@ -26,6 +28,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
+	httpx.SetErrorHandler(xcode.ErrHandler)
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
 }

@@ -33,7 +33,6 @@ func NewChangeAvatarLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Chan
 }
 
 func (l *ChangeAvatarLogic) ChangeAvatar(req *types.ChangeAvatarRequest) (resp *types.ChangeAvatarResponse, err error) {
-	// todo: add your logic here and delete this line
 	userId, err := l.ctx.Value(types.UserIdKey).(json.Number).Int64()
 	if err != nil {
 		return nil, err
