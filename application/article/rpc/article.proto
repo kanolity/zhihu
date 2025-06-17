@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package article;
+
+option go_package = "./article";
+
+service Article {
+  rpc Publish(PublishRequest) returns (PublishResponse);
+}
+
+message PublishRequest {
+  int64 userId = 1;
+  string title = 2;
+  string content = 3;
+  string description = 4;
+  string cover = 5;
+}
+
+message PublishResponse {
+  int64 articleId = 1;
+}

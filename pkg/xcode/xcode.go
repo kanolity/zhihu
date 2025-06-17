@@ -10,14 +10,15 @@ type XCode interface {
 }
 
 type Code struct {
-	code    int
-	message string
+	code int
+	msg  string
 }
 
 func (c Code) Error() string {
-	if len(c.message) > 0 {
-		return c.message
+	if len(c.msg) > 0 {
+		return c.msg
 	}
+
 	return strconv.Itoa(c.code)
 }
 
@@ -26,8 +27,9 @@ func (c Code) Code() int {
 }
 
 func (c Code) Message() string {
-	return c.message
+	return c.Error()
 }
+
 func (c Code) Details() []interface{} {
 	return nil
 }
@@ -40,13 +42,14 @@ func String(s string) Code {
 	if err != nil {
 		return ServerErr
 	}
+
 	return Code{code: code}
 }
 
-func New(code int, message string) Code {
-	return Code{code: code, message: message}
+func New(code int, msg string) Code {
+	return Code{code: code, msg: msg}
 }
 
-func add(code int, message string) Code {
-	return Code{code: code, message: message}
+func add(code int, msg string) Code {
+	return Code{code: code, msg: msg}
 }

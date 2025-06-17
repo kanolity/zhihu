@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"go_code/zhihu/application/user/api/internal/code"
 	"go_code/zhihu/application/user/rpc/types/user"
@@ -117,16 +116,16 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	}, nil
 }
 
-func checkVerificationCode(rds *redis.Redis, mobile, code string) error {
+func checkVerificationCode(rds *redis.Redis, mobile, codes string) error {
 	cacheCode, err := getActivationCache(mobile, rds)
 	if err != nil {
 		return err
 	}
 	if cacheCode == "" {
-		return errors.New("verification code expired")
+		return code.VerificationCodeExpired
 	}
-	if cacheCode != code {
-		return errors.New("verification code failed")
+	if cacheCode != codes {
+		return code.VerificationCodeFailed
 	}
 	return nil
 }

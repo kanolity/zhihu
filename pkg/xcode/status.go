@@ -13,7 +13,7 @@ import (
 	"strconv"
 )
 
-var _XCode = (*Status)(nil)
+var _ XCode = (*Status)(nil)
 
 type Status struct {
 	sts *types.Status
@@ -24,7 +24,7 @@ func Error(code Code) *Status {
 }
 
 func Errorf(code Code, format string, args ...interface{}) *Status {
-	code.message = fmt.Sprintf(format, args...)
+	code.msg = fmt.Sprintf(format, args...)
 	return Error(code)
 }
 
