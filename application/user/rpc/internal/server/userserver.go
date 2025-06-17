@@ -52,3 +52,8 @@ func (s *UserServer) ChangeAvatar(ctx context.Context, in *user.ChangeAvatarRequ
 	l := logic.NewChangeAvatarLogic(ctx, s.svcCtx)
 	return l.ChangeAvatar(in)
 }
+
+func (s *UserServer) ChangePassword(ctx context.Context, in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
+	l := logic.NewChangePasswordLogic(ctx, s.svcCtx)
+	return l.ChangePassword(in)
+}

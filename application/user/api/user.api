@@ -37,6 +37,11 @@ type (
 		Avatar string `json:"avatar"`
 	}
 	ChangeAvatarResponse  {}
+	ChangePasswordRequest {
+		OldPassword string `json:"old_password"`
+		NewPassword string `json:"new_password"`
+	}
+	ChangePasswordResponse  {}
 )
 
 @server (
@@ -64,5 +69,8 @@ service user-api {
 
 	@handler ChangeAvatar
 	put /change_avatar (ChangeAvatarRequest) returns (ChangeAvatarResponse)
+
+	@handler ChangePassword
+	put /change_password (ChangePasswordRequest) returns (ChangePasswordResponse)
 }
 

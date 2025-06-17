@@ -645,6 +645,102 @@ func (*ChangeAvatarResponse) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{11}
 }
 
+type ChangePasswordRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	OldPassword   string                 `protobuf:"bytes,2,opt,name=OldPassword,proto3" json:"OldPassword,omitempty"`
+	NewPassword   string                 `protobuf:"bytes,3,opt,name=NewPassword,proto3" json:"NewPassword,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangePasswordRequest) Reset() {
+	*x = ChangePasswordRequest{}
+	mi := &file_user_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangePasswordRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePasswordRequest) ProtoMessage() {}
+
+func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
+func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ChangePasswordRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *ChangePasswordRequest) GetOldPassword() string {
+	if x != nil {
+		return x.OldPassword
+	}
+	return ""
+}
+
+func (x *ChangePasswordRequest) GetNewPassword() string {
+	if x != nil {
+		return x.NewPassword
+	}
+	return ""
+}
+
+type ChangePasswordResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangePasswordResponse) Reset() {
+	*x = ChangePasswordResponse{}
+	mi := &file_user_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangePasswordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePasswordResponse) ProtoMessage() {}
+
+func (x *ChangePasswordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePasswordResponse.ProtoReflect.Descriptor instead.
+func (*ChangePasswordResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{13}
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -686,14 +782,20 @@ const file_user_proto_rawDesc = "" +
 	"\x13ChangeAvatarRequest\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x16\n" +
 	"\x06avatar\x18\x02 \x01(\tR\x06avatar\"\x16\n" +
-	"\x14ChangeAvatarResponse2\x8f\x03\n" +
+	"\x14ChangeAvatarResponse\"s\n" +
+	"\x15ChangePasswordRequest\x12\x16\n" +
+	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12 \n" +
+	"\vOldPassword\x18\x02 \x01(\tR\vOldPassword\x12 \n" +
+	"\vNewPassword\x18\x03 \x01(\tR\vNewPassword\"\x18\n" +
+	"\x16ChangePasswordResponse2\xdc\x03\n" +
 	"\x04User\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x129\n" +
 	"\bFindById\x12\x15.user.FindByIdRequest\x1a\x16.user.FindByIdResponse\x12E\n" +
 	"\fFindByMobile\x12\x19.user.FindByMobileRequest\x1a\x1a.user.FindByMobileResponse\x12K\n" +
 	"\x0eFindByUsername\x12\x1b.user.FindByUsernameRequest\x1a\x1c.user.FindByUsernameResponse\x126\n" +
 	"\aSendSms\x12\x14.user.SendSmsRequest\x1a\x15.user.SendSmsResponse\x12E\n" +
-	"\fChangeAvatar\x12\x19.user.ChangeAvatarRequest\x1a\x1a.user.ChangeAvatarResponseB\bZ\x06./userb\x06proto3"
+	"\fChangeAvatar\x12\x19.user.ChangeAvatarRequest\x1a\x1a.user.ChangeAvatarResponse\x12K\n" +
+	"\x0eChangePassword\x12\x1b.user.ChangePasswordRequest\x1a\x1c.user.ChangePasswordResponseB\bZ\x06./userb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -707,7 +809,7 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_user_proto_goTypes = []any{
 	(*RegisterRequest)(nil),        // 0: user.RegisterRequest
 	(*RegisterResponse)(nil),       // 1: user.RegisterResponse
@@ -721,6 +823,8 @@ var file_user_proto_goTypes = []any{
 	(*SendSmsResponse)(nil),        // 9: user.SendSmsResponse
 	(*ChangeAvatarRequest)(nil),    // 10: user.ChangeAvatarRequest
 	(*ChangeAvatarResponse)(nil),   // 11: user.ChangeAvatarResponse
+	(*ChangePasswordRequest)(nil),  // 12: user.ChangePasswordRequest
+	(*ChangePasswordResponse)(nil), // 13: user.ChangePasswordResponse
 }
 var file_user_proto_depIdxs = []int32{
 	0,  // 0: user.User.Register:input_type -> user.RegisterRequest
@@ -729,14 +833,16 @@ var file_user_proto_depIdxs = []int32{
 	6,  // 3: user.User.FindByUsername:input_type -> user.FindByUsernameRequest
 	8,  // 4: user.User.SendSms:input_type -> user.SendSmsRequest
 	10, // 5: user.User.ChangeAvatar:input_type -> user.ChangeAvatarRequest
-	1,  // 6: user.User.Register:output_type -> user.RegisterResponse
-	3,  // 7: user.User.FindById:output_type -> user.FindByIdResponse
-	5,  // 8: user.User.FindByMobile:output_type -> user.FindByMobileResponse
-	7,  // 9: user.User.FindByUsername:output_type -> user.FindByUsernameResponse
-	9,  // 10: user.User.SendSms:output_type -> user.SendSmsResponse
-	11, // 11: user.User.ChangeAvatar:output_type -> user.ChangeAvatarResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
+	12, // 6: user.User.ChangePassword:input_type -> user.ChangePasswordRequest
+	1,  // 7: user.User.Register:output_type -> user.RegisterResponse
+	3,  // 8: user.User.FindById:output_type -> user.FindByIdResponse
+	5,  // 9: user.User.FindByMobile:output_type -> user.FindByMobileResponse
+	7,  // 10: user.User.FindByUsername:output_type -> user.FindByUsernameResponse
+	9,  // 11: user.User.SendSms:output_type -> user.SendSmsResponse
+	11, // 12: user.User.ChangeAvatar:output_type -> user.ChangeAvatarResponse
+	13, // 13: user.User.ChangePassword:output_type -> user.ChangePasswordResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -753,7 +859,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

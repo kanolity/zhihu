@@ -41,6 +41,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ChangeAvatarHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPut,
+				Path:    "/change_password",
+				Handler: ChangePasswordHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
 				Path:    "/info",
 				Handler: UserInfoHandler(serverCtx),

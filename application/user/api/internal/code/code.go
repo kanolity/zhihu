@@ -12,4 +12,6 @@ var (
 	LoginPasswordEmpty      = xcode.New(10007, "密码为空")
 	VerificationCodeExpired = xcode.New(10008, "验证码已过期")
 	VerificationCodeFailed  = xcode.New(10009, "验证码错误")
+	LoginPasswordFailed     = xcode.New(10010, "密码错误")
+	LoginUserUnexisted      = xcode.New(10011, "用户不存在")
 )

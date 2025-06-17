@@ -16,6 +16,8 @@ import (
 type (
 	ChangeAvatarRequest    = user.ChangeAvatarRequest
 	ChangeAvatarResponse   = user.ChangeAvatarResponse
+	ChangePasswordRequest  = user.ChangePasswordRequest
+	ChangePasswordResponse = user.ChangePasswordResponse
 	FindByIdRequest        = user.FindByIdRequest
 	FindByIdResponse       = user.FindByIdResponse
 	FindByMobileRequest    = user.FindByMobileRequest
@@ -34,6 +36,7 @@ type (
 		FindByUsername(ctx context.Context, in *FindByUsernameRequest, opts ...grpc.CallOption) (*FindByUsernameResponse, error)
 		SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 		ChangeAvatar(ctx context.Context, in *ChangeAvatarRequest, opts ...grpc.CallOption) (*ChangeAvatarResponse, error)
+		ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	}
 
 	defaultUser struct {
@@ -75,4 +78,9 @@ func (m *defaultUser) SendSms(ctx context.Context, in *SendSmsRequest, opts ...g
 func (m *defaultUser) ChangeAvatar(ctx context.Context, in *ChangeAvatarRequest, opts ...grpc.CallOption) (*ChangeAvatarResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.ChangeAvatar(ctx, in, opts...)
+}
+
+func (m *defaultUser) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.ChangePassword(ctx, in, opts...)
 }

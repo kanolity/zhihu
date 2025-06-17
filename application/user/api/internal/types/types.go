@@ -7,12 +7,19 @@ type Token struct {
 	AccessToken  string `json:"access_token"`
 	AccessExpire int64  `json:"access_expire"`
 }
-
 type ChangeAvatarRequest struct {
 	Avatar string `json:"avatar"`
 }
 
 type ChangeAvatarResponse struct {
+}
+
+type ChangePasswordRequest struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}
+
+type ChangePasswordResponse struct {
 }
 
 type LoginRequest struct {

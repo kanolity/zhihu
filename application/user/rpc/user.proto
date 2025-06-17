@@ -11,6 +11,7 @@ service User{
   rpc FindByUsername(FindByUsernameRequest)returns(FindByUsernameResponse);
   rpc SendSms(SendSmsRequest)returns(SendSmsResponse);
   rpc ChangeAvatar(ChangeAvatarRequest)returns(ChangeAvatarResponse);
+  rpc ChangePassword(ChangePasswordRequest)returns(ChangePasswordResponse);
 }
 
 message RegisterRequest{
@@ -66,3 +67,12 @@ message   ChangeAvatarRequest{
   string avatar = 2;
 }
 message ChangeAvatarResponse{}
+
+message ChangePasswordRequest{
+  int64 userId = 1;
+  string OldPassword = 2;
+  string NewPassword = 3;
+}
+message ChangePasswordResponse{
+
+}

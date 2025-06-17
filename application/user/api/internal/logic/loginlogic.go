@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"go_code/zhihu/application/user/api/internal/code"
 	"go_code/zhihu/application/user/rpc/types/user"
 	"go_code/zhihu/pkg/encrypt"
@@ -76,10 +75,10 @@ func (l *LoginLogic) checkPassword(username string, password string) (*user.Find
 		return nil, err
 	}
 	if user1 == nil {
-		return nil, errors.New("用户不存在")
+		return nil, code.LoginUserUnexisted
 	}
 	if user1.Password != password {
-		return nil, errors.New("密码错误")
+		return nil, code.LoginPasswordFailed
 	}
 	return user1, nil
 }
