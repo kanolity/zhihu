@@ -1,10 +1,12 @@
 # 仿知乎网页后端
 ## run program
-based on Golang and go-zero 
+Based on Golang and go-zero.  
+
 Before running the project, please make sure to start both **etcd** and **Redis**.
 ### user api 
-The configuration files are located in the `application/user/api/config` directory.
-**run user rpc first** 
+The configuration files are located in the `application/user/api/config` directory.  
+
+**Run user rpc first** 
 ```bash
 go run ./application/user/api/user.go
 ```
