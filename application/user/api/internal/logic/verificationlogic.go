@@ -2,8 +2,10 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
+	"go_code/zhihu/application/user/api/internal/code"
 	"go_code/zhihu/application/user/rpc/userclient"
 	"go_code/zhihu/pkg/utils"
 	"strconv"
@@ -36,37 +38,43 @@ func NewVerificationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Veri
 }
 
 func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *types.VerificationResponse, err error) {
+	userId, err := l.ctx.Value(types.UserIdKey).(json.Number).Int64()
+	if err != nil {
+		return nil, err
+	}
 	//获取今日验证码获取次数
 	count, err := l.getVerificationCount(req.Mobile)
 	if err != nil {
 		logx.Errorf("get verification count mobile[%s] err:%v", req.Mobile, err)
 	}
 	if count > verificationLimitPerDay {
-		return nil, err
+		return nil, code.VerificateTooMany
 	}
 
 	// 获取验证码，若无则创建
-	code, err := getActivationCache(req.Mobile, l.svcCtx.BizRedis)
+	vCode, err := getActivationCache(req.Mobile, l.svcCtx.BizRedis)
 	if err != nil {
 		logx.Errorf("get activation cache mobile[%s] err:%v", req.Mobile, err)
 	}
-	if len(code) == 0 {
-		code = utils.RandomNumber(6)
+	if len(vCode) == 0 {
+		vCode = utils.RandomNumber(6)
+	}
+
+	//将验证码存入缓存
+	err = saveActivationCache(req.Mobile, vCode, l.svcCtx.BizRedis)
+	if err != nil {
+		logx.Errorf("save activation cache mobile[%s] err:%v", req.Mobile, err)
+		return nil, err
 	}
 
 	//发送短信
 	_, err = l.svcCtx.UserRpc.SendSms(l.ctx, &userclient.SendSmsRequest{
+		UserId: userId,
 		Mobile: req.Mobile,
+		Code:   vCode,
 	})
 	if err != nil {
 		logx.Errorf("send sms mobile [%s] err:%v", req.Mobile, err)
-		return nil, err
-	}
-
-	//将验证码存入缓存
-	err = saveActivationCache(req.Mobile, code, l.svcCtx.BizRedis)
-	if err != nil {
-		logx.Errorf("save activation cache mobile[%s] err:%v", req.Mobile, err)
 		return nil, err
 	}
 

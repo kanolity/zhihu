@@ -473,6 +473,7 @@ type SendSmsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	Mobile        string                 `protobuf:"bytes,2,opt,name=mobile,proto3" json:"mobile,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -517,6 +518,13 @@ func (x *SendSmsRequest) GetUserId() int64 {
 func (x *SendSmsRequest) GetMobile() string {
 	if x != nil {
 		return x.Mobile
+	}
+	return ""
+}
+
+func (x *SendSmsRequest) GetCode() string {
+	if x != nil {
+		return x.Code
 	}
 	return ""
 }
@@ -774,10 +782,11 @@ const file_user_proto_rawDesc = "" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x16\n" +
-	"\x06avatar\x18\x04 \x01(\tR\x06avatar\"@\n" +
+	"\x06avatar\x18\x04 \x01(\tR\x06avatar\"T\n" +
 	"\x0eSendSmsRequest\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x16\n" +
-	"\x06mobile\x18\x02 \x01(\tR\x06mobile\"\x11\n" +
+	"\x06mobile\x18\x02 \x01(\tR\x06mobile\x12\x12\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\"\x11\n" +
 	"\x0fSendSmsResponse\"E\n" +
 	"\x13ChangeAvatarRequest\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x16\n" +

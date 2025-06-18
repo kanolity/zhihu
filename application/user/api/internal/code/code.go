@@ -14,4 +14,5 @@ var (
 	VerificationCodeFailed  = xcode.New(10009, "验证码错误")
 	LoginPasswordFailed     = xcode.New(10010, "密码错误")
 	LoginUserUnexisted      = xcode.New(10011, "用户不存在")
+	VerificateTooMany       = xcode.New(10012, "今日验证码获取次数已达上限")
 )
