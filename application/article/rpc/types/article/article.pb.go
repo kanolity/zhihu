@@ -26,8 +26,6 @@ type PublishRequest struct {
 	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Cover         string                 `protobuf:"bytes,5,opt,name=cover,proto3" json:"cover,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -83,20 +81,6 @@ func (x *PublishRequest) GetContent() string {
 	return ""
 }
 
-func (x *PublishRequest) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *PublishRequest) GetCover() string {
-	if x != nil {
-		return x.Cover
-	}
-	return ""
-}
-
 type PublishResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ArticleId     int64                  `protobuf:"varint,1,opt,name=articleId,proto3" json:"articleId,omitempty"`
@@ -145,13 +129,11 @@ var File_article_proto protoreflect.FileDescriptor
 
 const file_article_proto_rawDesc = "" +
 	"\n" +
-	"\rarticle.proto\x12\aarticle\"\x90\x01\n" +
+	"\rarticle.proto\x12\aarticle\"X\n" +
 	"\x0ePublishRequest\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x14\n" +
-	"\x05cover\x18\x05 \x01(\tR\x05cover\"/\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\"/\n" +
 	"\x0fPublishResponse\x12\x1c\n" +
 	"\tarticleId\x18\x01 \x01(\x03R\tarticleId2G\n" +
 	"\aArticle\x12<\n" +

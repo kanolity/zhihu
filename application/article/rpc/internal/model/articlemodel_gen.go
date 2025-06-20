@@ -44,8 +44,6 @@ type (
 		Id          uint64    `db:"id"`           // 主键ID
 		Title       string    `db:"title"`        // 标题
 		Content     string    `db:"content"`      // 内容
-		Cover       string    `db:"cover"`        // 封面
-		Description string    `db:"description"`  // 描述
 		AuthorId    uint64    `db:"author_id"`    // 作者ID
 		Status      int64     `db:"status"`       // 状态 0:待审核 1:审核不通过 2:可见 3:用户删除
 		CommentNum  int64     `db:"comment_num"`  // 评论数
@@ -96,8 +94,8 @@ func (m *defaultArticleModel) FindOne(ctx context.Context, id uint64) (*Article,
 func (m *defaultArticleModel) Insert(ctx context.Context, data *Article) (sql.Result, error) {
 	beyondArticleArticleIdKey := fmt.Sprintf("%s%v", cacheBeyondArticleArticleIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, articleRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Title, data.Content, data.Cover, data.Description, data.AuthorId, data.Status, data.CommentNum, data.LikeNum, data.CollectNum, data.ViewNum, data.ShareNum, data.TagIds, data.PublishTime)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, articleRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Title, data.Content, data.AuthorId, data.Status, data.CommentNum, data.LikeNum, data.CollectNum, data.ViewNum, data.ShareNum, data.TagIds, data.PublishTime)
 	}, beyondArticleArticleIdKey)
 	return ret, err
 }
@@ -106,7 +104,7 @@ func (m *defaultArticleModel) Update(ctx context.Context, data *Article) error {
 	beyondArticleArticleIdKey := fmt.Sprintf("%s%v", cacheBeyondArticleArticleIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, articleRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.Title, data.Content, data.Cover, data.Description, data.AuthorId, data.Status, data.CommentNum, data.LikeNum, data.CollectNum, data.ViewNum, data.ShareNum, data.TagIds, data.PublishTime, data.Id)
+		return conn.ExecCtx(ctx, query, data.Title, data.Content, data.AuthorId, data.Status, data.CommentNum, data.LikeNum, data.CollectNum, data.ViewNum, data.ShareNum, data.TagIds, data.PublishTime, data.Id)
 	}, beyondArticleArticleIdKey)
 	return err
 }

@@ -35,9 +35,6 @@ func (l *PublishLogic) Publish(req *types.PublishRequest) (resp *types.PublishRe
 	if len(req.Content) < minContentLen {
 		return nil, code.ArticleContentTooFewWords
 	}
-	if len(req.Cover) == 0 {
-		return nil, code.CoverCantEmpty
-	}
 	userId, err := l.ctx.Value("userId").(json.Number).Int64()
 	if err != nil {
 		logx.Errorf("l.ctx.Value error: %v", err)
@@ -47,7 +44,6 @@ func (l *PublishLogic) Publish(req *types.PublishRequest) (resp *types.PublishRe
 		UserId:  userId,
 		Title:   req.Title,
 		Content: req.Content,
-		Cover:   req.Cover,
 	})
 	if err != nil {
 		logx.Errorf("l.svcCtx.ArticleRpc.Publish req:%v userId:%v error: %v", req, userId, err)

@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"go_code/zhihu/application/like/rpc/internal/model"
 
 	"go_code/zhihu/application/like/rpc/internal/svc"
 	"go_code/zhihu/application/like/rpc/types/like"
@@ -24,7 +25,19 @@ func NewIsThumbupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsThumb
 }
 
 func (l *IsThumbupLogic) IsThumbup(in *like.IsThumbupRequest) (*like.IsThumbupResponse, error) {
-	// todo: add your logic here and delete this line
+	result := make(map[int64]*like.UserThumbup)
 
-	return &like.IsThumbupResponse{}, nil
+	lk, err := l.svcCtx.LikeModel.FindByUnique(l.ctx, in.BizId, in.TargetId, in.UserId)
+	if err != nil && err != model.ErrNotFound {
+		return nil, err
+	}
+	if lk != nil {
+		result[int64(lk.UserId)] = &like.UserThumbup{
+			UserId:      int64(lk.UserId),
+			ThumbupTime: lk.CreateTime.Unix(),
+			LikeType:    int32(lk.Type),
+		}
+	}
+
+	return &like.IsThumbupResponse{UserThumbups: result}, nil
 }

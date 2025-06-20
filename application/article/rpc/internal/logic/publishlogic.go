@@ -33,8 +33,6 @@ func (l *PublishLogic) Publish(in *article.PublishRequest) (*article.PublishResp
 	ret, err := l.svcCtx.ArticleModel.Insert(l.ctx, &model.Article{
 		Title:       in.Title,
 		Content:     in.Content,
-		Cover:       in.Cover,
-		Description: in.Description,
 		AuthorId:    uint64(in.UserId),
 		PublishTime: time.Now(),
 		CreateTime:  time.Now(),

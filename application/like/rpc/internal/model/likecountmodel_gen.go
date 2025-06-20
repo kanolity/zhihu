@@ -34,7 +34,7 @@ type (
 		Update(ctx context.Context, data *LikeCount) error
 		Delete(ctx context.Context, id uint64) error
 		Incr(ctx context.Context, bizId string, targetId int64, likeType int32) error
-		Decr(ctx context.Context, bizId string, targetId int64, likeType int32) error
+		FindByBizTarget(ctx context.Context, bizId string, targetId int64) (*LikeCount, error)
 	}
 
 	defaultLikeCountModel struct {

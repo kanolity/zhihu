@@ -28,6 +28,7 @@ func NewLikeModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) Li
 		defaultLikeModel: newLikeModel(conn, c, opts...),
 	}
 }
+
 func (m *defaultLikeModel) Exists(bizId string, targetId, userId int64) (bool, error) {
 	query := fmt.Sprintf("SELECT COUNT(1) FROM %s WHERE biz_id = ? AND target_id = ? AND user_id = ?", m.table)
 	var count int64

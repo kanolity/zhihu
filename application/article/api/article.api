@@ -6,17 +6,9 @@ info (
 )
 
 type (
-	UploadCoverRequest {
-		Cover string `json:"cover"`
-	}
-	UploadCoverResponse {
-		CoverUrl string `json:"cover_url"`
-	}
 	PublishRequest {
-		Title       string `json:"title"`
-		Content     string `json:"content"`
-		Description string `json:"description"`
-		Cover       string `json:"cover"`
+		Title   string `json:"title"`
+		Content string `json:"content"`
 	}
 	PublishResponse {
 		ArticleId int64 `json:"article_id"`
@@ -28,9 +20,6 @@ type (
 	jwt:    Auth
 )
 service article-api {
-	@handler UploadCoverHandler
-	post /upload/cover (UploadCoverRequest) returns (UploadCoverResponse)
-
 	@handler PublishHandler
 	post /publish (PublishRequest) returns (PublishResponse)
 }
