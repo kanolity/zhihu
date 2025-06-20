@@ -56,9 +56,8 @@ message FindByUsernameResponse {
 }
 
 message SendSmsRequest {
-  int64 userId = 1;
-  string mobile = 2;
-  string code =3;
+  string mobile = 1;
+  string code =2;
 }
 
 message SendSmsResponse {

@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"go_code/zhihu/application/user/api/internal/code"
@@ -38,10 +37,6 @@ func NewVerificationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Veri
 }
 
 func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *types.VerificationResponse, err error) {
-	userId, err := l.ctx.Value(types.UserIdKey).(json.Number).Int64()
-	if err != nil {
-		return nil, err
-	}
 	//获取今日验证码获取次数
 	count, err := l.getVerificationCount(req.Mobile)
 	if err != nil {
@@ -69,7 +64,6 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 
 	//发送短信
 	_, err = l.svcCtx.UserRpc.SendSms(l.ctx, &userclient.SendSmsRequest{
-		UserId: userId,
 		Mobile: req.Mobile,
 		Code:   vCode,
 	})

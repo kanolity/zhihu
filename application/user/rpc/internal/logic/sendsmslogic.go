@@ -30,7 +30,7 @@ func (l *SendSmsLogic) SendSms(in *user.SendSmsRequest) (*user.SendSmsResponse, 
 	}
 
 	// 记录日志
-	logx.WithContext(l.ctx).Infof("发送验证码，UserId: %d, Mobile: %s, Code: %s", in.UserId, in.Mobile, in.Code)
+	logx.WithContext(l.ctx).Infof("发送验证码, Mobile: %s, Code: %s", in.Mobile, in.Code)
 
 	// 调用短信服务
 	//err := l.svcCtx.SmsClient.Send(in.Mobile, in.Code)

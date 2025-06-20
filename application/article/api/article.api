@@ -24,3 +24,6 @@ service article-api {
 	post /publish (PublishRequest) returns (PublishResponse)
 }
 
+//游客账号
+//username:traveller
+//password:1234
