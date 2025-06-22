@@ -48,13 +48,13 @@ func (l *ThumbupLogic) Thumbup(in *like.ThumbupRequest) (*like.ThumbupResponse, 
 	// 3. 状态决策逻辑
 	if record != nil && record.Deleted == 0 {
 		if in.LikeType == cancelLikeType(int32(record.Type)) {
-			// 👇 用户希望“取消”之前的点赞/点踩
+			//  用户希望“取消”之前的点赞/点踩
 			// 异步投递取消行为
 		} else if int32(record.Type) != in.LikeType {
-			// 👇 用户切换了行为（点踩 → 点赞）
+			//  用户切换了行为（点踩 → 点赞）
 			// 异步投递“更新行为类型”
 		} else {
-			// 👇 幂等重复行为，直接返回现有状态
+			//  幂等重复行为，直接返回现有状态
 			cnt, _ := l.svcCtx.LikeCountModel.FindByBizTarget(l.ctx, in.BizId, in.ObjId)
 			return &like.ThumbupResponse{
 				BizId:      in.BizId,
@@ -65,7 +65,7 @@ func (l *ThumbupLogic) Thumbup(in *like.ThumbupRequest) (*like.ThumbupResponse, 
 		}
 	} else {
 		if isCancelType(in.LikeType) {
-			// 👇 用户尝试取消不存在的行为 → 无需处理，直接返回
+			//  用户尝试取消不存在的行为 → 无需处理，直接返回
 			cnt, _ := l.svcCtx.LikeCountModel.FindByBizTarget(l.ctx, in.BizId, in.ObjId)
 			return &like.ThumbupResponse{
 				BizId:      in.BizId,
@@ -74,7 +74,7 @@ func (l *ThumbupLogic) Thumbup(in *like.ThumbupRequest) (*like.ThumbupResponse, 
 				DislikeNum: cnt.DislikeNum,
 			}, nil
 		}
-		// 👇 首次点赞/点踩行为，继续投递
+		//  首次点赞/点踩行为，继续投递
 	}
 
 	// 4. 构造异步消息
