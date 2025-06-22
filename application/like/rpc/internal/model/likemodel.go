@@ -39,7 +39,7 @@ func (m *defaultLikeModel) Exists(bizId string, targetId, userId int64) (bool, e
 	return count > 0, nil
 }
 func (m *customLikeModel) FindByUnique(ctx context.Context, bizId string, targetId, userId int64) (*Like, error) {
-	query := fmt.Sprintf("SELECT %s FROM %s WHERE biz_id = ? AND target_id = ? AND user_id = ? LIMIT 1", likeRows, m.table)
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE biz_id = ? AND target_id = ? AND user_id = ? And deleted=0  LIMIT 1", likeRows, m.table)
 	var resp Like
 	err := m.CachedConn.QueryRowNoCacheCtx(ctx, &resp, query, bizId, targetId, userId)
 	if err == sqlc.ErrNotFound {

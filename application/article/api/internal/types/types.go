@@ -3,6 +3,38 @@
 
 package types
 
+type ArticleDetailRequest struct {
+	ArticleId int64 `form:"article_id"`
+}
+
+type ArticleDetailResponse struct {
+	Title      string `json:"title"`
+	Content    string `json:"content"`
+	AuthorId   string `json:"author_id"`
+	AuthorName string `json:"author_name"`
+}
+
+type ArticleInfo struct {
+	ArticleId int64  `json:"article_id"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+}
+
+type ArticleListRequest struct {
+	AuthorId  int64 `form:"author_id"`
+	Cursor    int64 `form:"cursor"`
+	PageSize  int64 `form:"page_size"`
+	SortType  int32 `form:"sort_type"` // 1=发布时间，2=点赞数
+	ArticleId int64 `form:"article_id"`
+}
+
+type ArticleListResponse struct {
+	Articles  []ArticleInfo `json:"articles"`
+	Cursor    int64         `json:"cursor"`     // 本页最后一条的排序字段（如时间戳）
+	ArticleId int64         `json:"article_id"` // 本页最后一条的文章 ID
+	IsEnd     bool          `json:"is_end"`     // 是否已经到底
+}
+
 type PublishRequest struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`

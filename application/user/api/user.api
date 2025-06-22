@@ -74,3 +74,6 @@ service user-api {
 	put /change_password (ChangePasswordRequest) returns (ChangePasswordResponse)
 }
 
+	//游客账号
+	//username:traveller
+	//password:1234

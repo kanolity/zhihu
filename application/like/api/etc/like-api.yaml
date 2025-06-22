@@ -1,0 +1,14 @@
+Name: like-api
+Host: 0.0.0.0
+Port: 8888
+LikeRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: like.rpc
+Auth:
+  AccessSecret: qazwsxedc
+  AccessExpire: 604800
+  RefreshSecret: qazwsxedc
+  RefreshExpire: 2592000
+  RefreshAfter: 604800

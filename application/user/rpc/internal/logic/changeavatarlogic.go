@@ -26,7 +26,7 @@ func NewChangeAvatarLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Chan
 }
 
 func (l *ChangeAvatarLogic) ChangeAvatar(in *user.ChangeAvatarRequest) (*user.ChangeAvatarResponse, error) {
-	existingUser, err := l.svcCtx.UserModel.FindOne(l.ctx, uint64(in.UserId))
+	existingUser, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
 		return nil, code.FindUserFailed
 	}

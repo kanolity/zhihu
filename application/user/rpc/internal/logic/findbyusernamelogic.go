@@ -35,7 +35,7 @@ func (l *FindByUsernameLogic) FindByUsername(in *user.FindByUsernameRequest) (*u
 
 	return &user.FindByUsernameResponse{
 		Username: user1.Username,
-		UserId:   int64(user1.Id),
+		UserId:   user1.Id,
 		Avatar:   user1.Avatar,
 		Password: user1.Password,
 	}, nil

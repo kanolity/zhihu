@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go_code/zhihu/application/user/api/internal/code"
 	"go_code/zhihu/application/user/rpc/userclient"
 	"os"
 	"path"
@@ -42,7 +43,7 @@ func (l *ChangeAvatarLogic) ChangeAvatar(req *types.ChangeAvatarRequest) (resp *
 	if strings.HasPrefix(req.Avatar, "data:image") {
 		filePath, err := saveAvatarFile(req.Avatar, userId)
 		if err != nil {
-			return nil, fmt.Errorf("保存头像失败: %w", err)
+			return nil, code.AvatarUploadFailed
 		}
 		// 替换成保存后的访问路径
 		req.Avatar = filePath

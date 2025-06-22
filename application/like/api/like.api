@@ -1,0 +1,52 @@
+syntax = "v1"
+
+info (
+	title:   "type title here"
+	desc:    "type desc here"
+	author:  "type author here"
+	email:   "type email here"
+	version: "type version here"
+)
+
+type (
+	// 点赞请求
+	ThumbupReq {
+		BizId    string `json:"biz_id"`
+		ObjId    int64  `json:"obj_id"`
+		UserId   int64  `json:"user_id"`
+		LikeType int32  `json:"like_type"` //  1=点赞, 2=点踩, 3=撤销点赞, 4=撤销点踩
+	}
+	ThumbupResp {
+		BizId      string `json:"biz_id"`
+		ObjId      int64  `json:"obj_id"`
+		LikeNum    int64  `json:"like_num"`
+		DislikeNum int64  `json:"dislike_num"`
+	}
+	// 查询点赞状态
+	IsThumbupReq {
+		BizId    string `form:"biz_id"`
+		TargetId int64  `form:"target_id"`
+		UserId   int64  `form:"user_id"`
+	}
+	UserThumbup {
+		UserId      int64 `json:"user_id"`
+		ThumbupTime int64 `json:"thumbup_time"`
+		LikeType    int32 `json:"like_type"`
+	}
+	IsThumbupResp {
+		UserThumbups map[int64]UserThumbup `json:"user_thumbups"`
+	}
+)
+
+@server (
+	prefix: /api/like
+	jwt:    Auth
+)
+service like-api {
+	@handler Thumbup
+	post /thumbup (ThumbupReq) returns (ThumbupResp)
+
+	@handler IsThumbup
+	get /is_thumbup (IsThumbupReq) returns (IsThumbupResp)
+}
+

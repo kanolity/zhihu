@@ -12,3 +12,8 @@ ArticleRPC:
     Hosts:
       - 127.0.0.1:2379
     Key: article.rpc
+UserRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc

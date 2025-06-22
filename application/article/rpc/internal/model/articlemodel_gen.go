@@ -30,9 +30,11 @@ var (
 type (
 	articleModel interface {
 		Insert(ctx context.Context, data *Article) (sql.Result, error)
-		FindOne(ctx context.Context, id uint64) (*Article, error)
+		FindOne(ctx context.Context, id int64) (*Article, error)
 		Update(ctx context.Context, data *Article) error
-		Delete(ctx context.Context, id uint64) error
+		Delete(ctx context.Context, id int64) error
+		ArticlesByUserId(ctx context.Context, userId int64, status int, likeNum int64, pubTime, sortField string, limit int) ([]*Article, error)
+		UpdateArticleStatus(ctx context.Context, id int64, status int) error
 	}
 
 	defaultArticleModel struct {
@@ -41,7 +43,7 @@ type (
 	}
 
 	Article struct {
-		Id          uint64    `db:"id"`           // 主键ID
+		Id          int64     `db:"id"`           // 主键ID
 		Title       string    `db:"title"`        // 标题
 		Content     string    `db:"content"`      // 内容
 		AuthorId    uint64    `db:"author_id"`    // 作者ID
@@ -65,7 +67,7 @@ func newArticleModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option)
 	}
 }
 
-func (m *defaultArticleModel) Delete(ctx context.Context, id uint64) error {
+func (m *defaultArticleModel) Delete(ctx context.Context, id int64) error {
 	beyondArticleArticleIdKey := fmt.Sprintf("%s%v", cacheBeyondArticleArticleIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
@@ -74,7 +76,7 @@ func (m *defaultArticleModel) Delete(ctx context.Context, id uint64) error {
 	return err
 }
 
-func (m *defaultArticleModel) FindOne(ctx context.Context, id uint64) (*Article, error) {
+func (m *defaultArticleModel) FindOne(ctx context.Context, id int64) (*Article, error) {
 	beyondArticleArticleIdKey := fmt.Sprintf("%s%v", cacheBeyondArticleArticleIdPrefix, id)
 	var resp Article
 	err := m.QueryRowCtx(ctx, &resp, beyondArticleArticleIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {

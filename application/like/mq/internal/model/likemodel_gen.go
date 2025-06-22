@@ -35,6 +35,7 @@ type (
 		Delete(ctx context.Context, id uint64) error
 		Exists(bizId string, targetId, userId int64) (bool, error)
 		FindByUnique(ctx context.Context, bizId string, targetId, userId int64) (*Like, error)
+		Upsert(ctx context.Context, l *Like) error
 	}
 
 	defaultLikeModel struct {
@@ -50,6 +51,7 @@ type (
 		Type       int64     `db:"type"`        // 类型 0:点赞 1:点踩
 		CreateTime time.Time `db:"create_time"` // 创建时间
 		UpdateTime time.Time `db:"update_time"` // 最后修改时间
+		Deleted    int64     `db:"deleted"`     // 是否已撤销（0=有效，1=取消）
 	}
 )
 
@@ -89,8 +91,8 @@ func (m *defaultLikeModel) FindOne(ctx context.Context, id uint64) (*Like, error
 func (m *defaultLikeModel) Insert(ctx context.Context, data *Like) (sql.Result, error) {
 	beyondLikeLikeIdKey := fmt.Sprintf("%s%v", cacheBeyondLikeLikeIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, likeRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.BizId, data.TargetId, data.UserId, data.Type)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, likeRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.BizId, data.TargetId, data.UserId, data.Type, data.Deleted)
 	}, beyondLikeLikeIdKey)
 	return ret, err
 }
@@ -99,7 +101,7 @@ func (m *defaultLikeModel) Update(ctx context.Context, data *Like) error {
 	beyondLikeLikeIdKey := fmt.Sprintf("%s%v", cacheBeyondLikeLikeIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, likeRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.BizId, data.TargetId, data.UserId, data.Type, data.Id)
+		return conn.ExecCtx(ctx, query, data.BizId, data.TargetId, data.UserId, data.Type, data.Deleted, data.Id)
 	}, beyondLikeLikeIdKey)
 	return err
 }

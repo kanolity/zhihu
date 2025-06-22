@@ -25,7 +25,7 @@ func NewChangePasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 }
 
 func (l *ChangePasswordLogic) ChangePassword(in *user.ChangePasswordRequest) (*user.ChangePasswordResponse, error) {
-	user1, err := l.svcCtx.UserModel.FindOne(l.ctx, uint64(in.UserId))
+	user1, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
 		return nil, code.FindUserFailed
 	}

@@ -27,3 +27,18 @@ func (s *ArticleServer) Publish(ctx context.Context, in *article.PublishRequest)
 	l := logic.NewPublishLogic(ctx, s.svcCtx)
 	return l.Publish(in)
 }
+
+func (s *ArticleServer) Articles(ctx context.Context, in *article.ArticlesRequest) (*article.ArticlesResponse, error) {
+	l := logic.NewArticlesLogic(ctx, s.svcCtx)
+	return l.Articles(in)
+}
+
+func (s *ArticleServer) ArticleDelete(ctx context.Context, in *article.ArticleDeleteRequest) (*article.ArticleDeleteResponse, error) {
+	l := logic.NewArticleDeleteLogic(ctx, s.svcCtx)
+	return l.ArticleDelete(in)
+}
+
+func (s *ArticleServer) ArticleDetail(ctx context.Context, in *article.ArticleDetailRequest) (*article.ArticleDetailResponse, error) {
+	l := logic.NewArticleDetailLogic(ctx, s.svcCtx)
+	return l.ArticleDetail(in)
+}

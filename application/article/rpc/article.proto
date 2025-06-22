@@ -6,6 +6,9 @@ option go_package = "./article";
 
 service Article {
   rpc Publish(PublishRequest) returns (PublishResponse);
+  rpc Articles(ArticlesRequest) returns (ArticlesResponse);
+  rpc ArticleDelete(ArticleDeleteRequest) returns (ArticleDeleteResponse);
+  rpc ArticleDetail(ArticleDetailRequest) returns (ArticleDetailResponse);
 }
 
 message PublishRequest {
@@ -16,4 +19,46 @@ message PublishRequest {
 
 message PublishResponse {
   int64 articleId = 1;
+}
+
+message ArticlesRequest {
+  int64 userId = 1;
+  int64 cursor = 2;//游标，最后一条的发布时间或点赞量
+  int64 pageSize = 3;
+  int32 sortType = 4; // 0=发布时间，1=点赞数
+  int64 articleId = 5;
+}
+
+
+message ArticleItem {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  int64 commentCount = 4;
+  int64 likeCount = 5;
+  int64 publishTime = 6;
+  int64 authorId = 7;
+}
+
+message ArticlesResponse {
+  repeated ArticleItem articles = 1;
+  bool isEnd = 2;
+  int64 cursor = 3;
+  int64 articleId = 4;
+}
+
+message ArticleDeleteRequest {
+  int64 userId = 1;
+  int64 articleId = 2;
+}
+
+message ArticleDeleteResponse {
+}
+
+message ArticleDetailRequest {
+  int64 articleId = 1;
+}
+
+message ArticleDetailResponse {
+  ArticleItem article = 1;
 }

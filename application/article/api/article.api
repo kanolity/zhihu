@@ -13,6 +13,33 @@ type (
 	PublishResponse {
 		ArticleId int64 `json:"article_id"`
 	}
+	ArticleDetailRequest {
+		ArticleId int64 `form:"article_id"`
+	}
+	ArticleDetailResponse {
+		Title      string `json:"title"`
+		Content    string `json:"content"`
+		AuthorId   string `json:"author_id"`
+		AuthorName string `json:"author_name"`
+	}
+	ArticleListRequest {
+		AuthorId  int64 `form:"author_id"`
+		Cursor    int64 `form:"cursor"`
+		PageSize  int64 `form:"page_size"`
+		SortType  int32 `form:"sort_type"` // 0=发布时间，1=点赞数
+		ArticleId int64 `form:"article_id"`
+	}
+	ArticleInfo {
+		ArticleId int64  `json:"article_id"`
+		Title     string `json:"title"`
+		Content   string `json:"content"`
+	}
+	ArticleListResponse {
+		Articles  []ArticleInfo `json:"articles"`
+		Cursor    int64         `json:"cursor"` // 本页最后一条的排序字段（如时间戳）
+		ArticleId int64         `json:"article_id"` // 本页最后一条的文章 ID
+		IsEnd     bool          `json:"is_end"` // 是否已经到底
+	}
 )
 
 @server (
@@ -22,8 +49,11 @@ type (
 service article-api {
 	@handler PublishHandler
 	post /publish (PublishRequest) returns (PublishResponse)
+
+	@handler ArticleList
+	get /list (ArticleListRequest) returns (ArticleListResponse)
+
+	@handler ArticleDetail
+	get /detail (ArticleDetailRequest) returns (ArticleDetailResponse)
 }
 
-//游客账号
-//username:traveller
-//password:1234

@@ -14,11 +14,21 @@ import (
 )
 
 type (
-	PublishRequest  = article.PublishRequest
-	PublishResponse = article.PublishResponse
+	ArticleDeleteRequest  = article.ArticleDeleteRequest
+	ArticleDeleteResponse = article.ArticleDeleteResponse
+	ArticleDetailRequest  = article.ArticleDetailRequest
+	ArticleDetailResponse = article.ArticleDetailResponse
+	ArticleItem           = article.ArticleItem
+	ArticlesRequest       = article.ArticlesRequest
+	ArticlesResponse      = article.ArticlesResponse
+	PublishRequest        = article.PublishRequest
+	PublishResponse       = article.PublishResponse
 
 	Article interface {
 		Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
+		Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error)
+		ArticleDelete(ctx context.Context, in *ArticleDeleteRequest, opts ...grpc.CallOption) (*ArticleDeleteResponse, error)
+		ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error)
 	}
 
 	defaultArticle struct {
@@ -35,4 +45,19 @@ func NewArticle(cli zrpc.Client) Article {
 func (m *defaultArticle) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error) {
 	client := article.NewArticleClient(m.cli.Conn())
 	return client.Publish(ctx, in, opts...)
+}
+
+func (m *defaultArticle) Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.Articles(ctx, in, opts...)
+}
+
+func (m *defaultArticle) ArticleDelete(ctx context.Context, in *ArticleDeleteRequest, opts ...grpc.CallOption) (*ArticleDeleteResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.ArticleDelete(ctx, in, opts...)
+}
+
+func (m *defaultArticle) ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.ArticleDetail(ctx, in, opts...)
 }

@@ -30,9 +30,9 @@ var (
 type (
 	userModel interface {
 		Insert(ctx context.Context, data *User) (sql.Result, error)
-		FindOne(ctx context.Context, id uint64) (*User, error)
+		FindOne(ctx context.Context, id int64) (*User, error)
 		Update(ctx context.Context, data *User) error
-		Delete(ctx context.Context, id uint64) error
+		Delete(ctx context.Context, id int64) error
 		FindByUsername(ctx context.Context, username string) (*User, error)
 		FindByMobile(ctx context.Context, mobile string) (*User, error)
 	}
@@ -43,7 +43,7 @@ type (
 	}
 
 	User struct {
-		Id       uint64    `db:"id"`       // 主键ID
+		Id       int64     `db:"id"`       // 主键ID
 		Mtime    time.Time `db:"mtime"`    // 最后修改时间
 		Ctime    time.Time `db:"ctime"`    // 创建时间
 		Username string    `db:"username"` // 用户名
@@ -60,7 +60,7 @@ func newUserModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *d
 	}
 }
 
-func (m *defaultUserModel) Delete(ctx context.Context, id uint64) error {
+func (m *defaultUserModel) Delete(ctx context.Context, id int64) error {
 	beyondUserUserIdKey := fmt.Sprintf("%s%v", cacheBeyondUserUserIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
@@ -69,7 +69,7 @@ func (m *defaultUserModel) Delete(ctx context.Context, id uint64) error {
 	return err
 }
 
-func (m *defaultUserModel) FindOne(ctx context.Context, id uint64) (*User, error) {
+func (m *defaultUserModel) FindOne(ctx context.Context, id int64) (*User, error) {
 	beyondUserUserIdKey := fmt.Sprintf("%s%v", cacheBeyondUserUserIdPrefix, id)
 	var resp User
 	err := m.QueryRowCtx(ctx, &resp, beyondUserUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {

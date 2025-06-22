@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"go_code/zhihu/application/like/mq/internal/config"
@@ -27,5 +28,6 @@ func main() {
 		serviceGroup.Add(mq)
 	}
 
+	fmt.Println("Server start ")
 	serviceGroup.Start()
 }
