@@ -39,52 +39,73 @@ func (l *ThumbupLogic) Consume(ctx context.Context, key, val string) error {
 		return nil
 	}
 
-	l.Infof("[Kafka][Thumbup] 收到 → biz=%s target=%d user=%d type=%d", msg.BizId, msg.ObjId, msg.UserId, msg.LikeType)
+	l.Infof("[Kafka][Thumbup] 收到行为: action=%s biz=%s target=%d user=%d type=%d", msg.Action, msg.BizId, msg.ObjId, msg.UserId, msg.LikeType)
 
-	// 点赞行为记录处理
-	var likeTypeToWrite int64
-	var deleted int64 = 0
+	var err error
 
-	switch msg.LikeType {
-	case LikeTypeThumbup, LikeTypeDown:
-		likeTypeToWrite = int64(msg.LikeType)
-		deleted = 0
-	case LikeTypeCancelThumbup:
-		likeTypeToWrite = int64(LikeTypeThumbup)
-		deleted = 1
-	case LikeTypeCancelDown:
-		likeTypeToWrite = int64(LikeTypeDown)
-		deleted = 1
-	default:
-		l.Errorf("[Kafka][Thumbup] 无效 LikeType: %d", msg.LikeType)
-		return nil
-	}
+	switch msg.Action {
+	case "new":
+		err = l.svcCtx.LikeModel.Upsert(ctx, &model.Like{
+			BizId:    msg.BizId,
+			TargetId: uint64(msg.ObjId),
+			UserId:   uint64(msg.UserId),
+			Type:     int64(msg.LikeType),
+			Deleted:  0,
+		})
+		if err != nil {
+			l.Errorf("[Thumbup] Upsert 失败: %v", err)
+			return err
+		}
 
-	// Upsert 行为表
-	err := l.svcCtx.LikeModel.Upsert(ctx, &model.Like{
-		BizId:    msg.BizId,
-		TargetId: uint64(msg.ObjId),
-		UserId:   uint64(msg.UserId),
-		Type:     likeTypeToWrite,
-		Deleted:  deleted,
-	})
-	if err != nil {
-		l.Errorf("[Thumbup] Upsert 行为失败: %v", err)
-		return err
-	}
-
-	// 点赞计数更新
-	switch msg.LikeType {
-	case LikeTypeThumbup, LikeTypeDown:
 		err = l.svcCtx.LikeCountModel.Incr(ctx, msg.BizId, msg.ObjId, msg.LikeType)
-	case LikeTypeCancelThumbup:
-		err = l.svcCtx.LikeCountModel.Decr(ctx, msg.BizId, msg.ObjId, LikeTypeThumbup)
-	case LikeTypeCancelDown:
-		err = l.svcCtx.LikeCountModel.Decr(ctx, msg.BizId, msg.ObjId, LikeTypeDown)
-	}
+		if err != nil {
+			l.Errorf("[Thumbup] 计数 Incr 失败: %v", err)
+		}
 
-	if err != nil {
-		l.Errorf("[Thumbup] 点赞计数更新失败: %v", err)
+	case "cancel":
+		err = l.svcCtx.LikeModel.Upsert(ctx, &model.Like{
+			BizId:    msg.BizId,
+			TargetId: uint64(msg.ObjId),
+			UserId:   uint64(msg.UserId),
+			Type:     int64(cancelTargetType(msg.LikeType)), // 存原始点赞类型
+			Deleted:  1,
+		})
+		if err != nil {
+			l.Errorf("[Thumbup] Cancel Upsert 失败: %v", err)
+			return err
+		}
+
+		err = l.svcCtx.LikeCountModel.Decr(ctx, msg.BizId, msg.ObjId, cancelTargetType(msg.LikeType))
+		if err != nil {
+			l.Errorf("[Thumbup] 计数 Decr 失败: %v", err)
+		}
+
+	case "switch":
+		// 1. 更新行为表 Type
+		err = l.svcCtx.LikeModel.Upsert(ctx, &model.Like{
+			BizId:    msg.BizId,
+			TargetId: uint64(msg.ObjId),
+			UserId:   uint64(msg.UserId),
+			Type:     int64(msg.LikeType),
+			Deleted:  0,
+		})
+		if err != nil {
+			l.Errorf("[Thumbup] Switch Upsert 失败: %v", err)
+			return err
+		}
+
+		// 2. 更新点赞计数：增加新类型，减少旧类型
+		if msg.OrigType >= 0 {
+			_ = l.svcCtx.LikeCountModel.Decr(ctx, msg.BizId, msg.ObjId, msg.OrigType)
+		}
+		err = l.svcCtx.LikeCountModel.Incr(ctx, msg.BizId, msg.ObjId, msg.LikeType)
+		if err != nil {
+			l.Errorf("[Thumbup] Switch计数更新失败: %v", err)
+		}
+
+	default:
+		l.Errorf("[Thumbup] 未知行为 action=%s", msg.Action)
+		return nil
 	}
 
 	return err
@@ -93,5 +114,16 @@ func (l *ThumbupLogic) Consume(ctx context.Context, key, val string) error {
 func Consumers(ctx context.Context, svcCtx *svc.ServiceContext) []service.Service {
 	return []service.Service{
 		kq.MustNewQueue(svcCtx.Config.KqConsumerConf, NewThumbupLogic(ctx, svcCtx)),
+	}
+}
+
+func cancelTargetType(t int32) int32 {
+	switch t {
+	case LikeTypeCancelThumbup:
+		return LikeTypeThumbup
+	case LikeTypeCancelDown:
+		return LikeTypeDown
+	default:
+		return -1
 	}
 }

@@ -46,7 +46,7 @@ func (m *defaultLikeCountModel) Incr(ctx context.Context, bizId string, targetId
 
 func (m *defaultLikeCountModel) Decr(ctx context.Context, bizId string, targetId int64, likeType int32) error {
 	field := "like_num"
-	if likeType == 4 {
+	if likeType == 1 {
 		field = "dislike_num"
 	}
 	query := fmt.Sprintf(`

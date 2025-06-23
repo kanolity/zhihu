@@ -46,14 +46,16 @@ func (m *customLikeModel) FindByUnique(ctx context.Context, bizId string, target
 	}
 	return &resp, err
 }
+
 func (m *defaultLikeModel) Upsert(ctx context.Context, l *Like) error {
 	query := fmt.Sprintf(`
-        INSERT INTO %s (biz_id, target_id, user_id, type)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO %s (biz_id, target_id, user_id, type, deleted)
+        VALUES (?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
             type = VALUES(type),
+            deleted = VALUES(deleted),
             update_time = NOW()
     `, m.table)
-	_, err := m.CachedConn.ExecNoCacheCtx(ctx, query, l.BizId, l.TargetId, l.UserId, l.Type)
+	_, err := m.CachedConn.ExecNoCacheCtx(ctx, query, l.BizId, l.TargetId, l.UserId, l.Type, l.Deleted)
 	return err
 }

@@ -1,0 +1,47 @@
+syntax = "v1"
+
+type (
+	CreateSessionReq {
+		User1Id int64 `json:"user1_id"`
+		User2Id int64 `json:"user2_id"`
+	}
+	CreateSessionResp {
+		SessionId int64 `json:"session_id"`
+	}
+	SendMessageReq {
+		SessionId  int64  `json:"session_id"`
+		SenderId   int64  `json:"sender_id"`
+		ReceiverId int64  `json:"receiver_id"`
+		Content    string `json:"content"`
+	}
+	SendMessageResp  {}
+	GetMessagesReq {
+		SessionId int64 `form:"session_id"`
+		Cursor    int64 `form:"cursor"`//最后一条消息的id
+		Limit     int64 `form:"limit"`
+	}
+	Message {
+		Id         int64  `json:"id"`
+		SenderId   int64  `json:"sender_id"`
+		ReceiverId int64  `json:"receiver_id"`
+		Content    string `json:"content"`
+		IsRead     bool   `json:"is_read"`
+		SendTime   string `json:"send_time"`
+	}
+	GetMessagesResp {
+		Messages []Message `json:"messages"`
+		HasMore  bool      `json:"has_more"`
+	}
+)
+
+service chat-api {
+	@handler createSession
+	post /api/chat/session/create (CreateSessionReq) returns (CreateSessionResp)
+
+	@handler sendMessage
+	post /api/chat/message/send (SendMessageReq) returns (SendMessageResp)
+
+	@handler getMessages
+	get /api/chat/messages/list (GetMessagesReq) returns (GetMessagesResp)
+}
+

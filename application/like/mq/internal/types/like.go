@@ -5,4 +5,6 @@ type ThumbupMsg struct {
 	ObjId    int64  ` json:"objId,omitempty"`    // 点赞对象id
 	UserId   int64  ` json:"userId,omitempty"`   // 用户id
 	LikeType int32  ` json:"likeType,omitempty"` // 类型
+	Action   string ` json:"action,omitempty"`
+	OrigType int32  ` json:"origType,omitempty"`
 }

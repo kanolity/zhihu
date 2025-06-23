@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package chat;
+option go_package = "./chat";
+
+// 会话创建
+message CreateSessionRequest {
+  int64 user1_id = 1;
+  int64 user2_id = 2;
+}
+
+message CreateSessionReply {
+  int64 session_id = 1;
+}
+
+// 发送消息
+message SendMessageRequest {
+  int64 session_id = 1;
+  int64 sender_id = 2;
+  int64 receiver_id = 3;
+  string content = 4;
+}
+
+message SendMessageReply {}
+
+// 拉取消息列表
+message GetMessagesRequest {
+  int64 session_id = 1;
+  int64 cursor = 2;//最后一条消息的id
+  int64 limit = 3;
+}
+
+message Message {
+  int64 id = 1;
+  int64 sender_id = 2;
+  int64 receiver_id = 3;
+  string content = 4;
+  bool is_read = 5;
+  string send_time = 6;
+}
+
+message GetMessagesReply {
+  repeated Message messages = 1;
+  bool has_more = 2;
+}
+
+// ChatService 定义
+service ChatService {
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionReply);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageReply);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesReply);
+}

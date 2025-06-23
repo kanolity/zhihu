@@ -4,6 +4,8 @@ import (
 	"context"
 	"go_code/zhihu/application/article/rpc/internal/code"
 	"go_code/zhihu/application/article/rpc/internal/model"
+	"go_code/zhihu/application/article/rpc/types"
+	"strconv"
 	"time"
 
 	"go_code/zhihu/application/article/rpc/internal/svc"
@@ -34,6 +36,7 @@ func (l *PublishLogic) Publish(in *article.PublishRequest) (*article.PublishResp
 		Title:       in.Title,
 		Content:     in.Content,
 		AuthorId:    uint64(in.UserId),
+		Status:      types.ArticleStatusVisible,
 		PublishTime: time.Now(),
 		CreateTime:  time.Now(),
 		UpdateTime:  time.Now(),
@@ -46,6 +49,25 @@ func (l *PublishLogic) Publish(in *article.PublishRequest) (*article.PublishResp
 	if err != nil {
 		logx.Errorf("publish last insert id err:%v", err)
 		return nil, err
+	}
+	var (
+		articleIdStr   = strconv.FormatInt(articleId, 10)
+		publishTimeKey = articlesKey(in.UserId, types.SortPublishTime)
+		likeNumKey     = articlesKey(in.UserId, types.SortLikeCount)
+	)
+	b, _ := l.svcCtx.BizRedis.ExistsCtx(l.ctx, publishTimeKey)
+	if b {
+		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, publishTimeKey, time.Now().Unix(), articleIdStr)
+		if err != nil {
+			logx.Errorf("ZaddCtx req: %v error: %v", in, err)
+		}
+	}
+	b, _ = l.svcCtx.BizRedis.ExistsCtx(l.ctx, likeNumKey)
+	if b {
+		_, err = l.svcCtx.BizRedis.ZaddCtx(l.ctx, likeNumKey, 0, articleIdStr)
+		if err != nil {
+			logx.Errorf("ZaddCtx req: %v error: %v", in, err)
+		}
 	}
 	return &article.PublishResponse{ArticleId: articleId}, nil
 }

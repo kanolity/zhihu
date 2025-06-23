@@ -13,7 +13,7 @@ CREATE TABLE `like`
     `update_time` timestamp           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
     PRIMARY KEY (`id`),
     KEY `ix_mtime` (`update_time`),
-    UNIQUE KEY uniq_biz_target_user (biz_id, target_id, user_id)
+    UNIQUE KEY uniq_like (biz_id, target_id, user_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT ='点赞表';
