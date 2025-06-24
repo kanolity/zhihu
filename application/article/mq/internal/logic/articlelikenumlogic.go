@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
@@ -26,6 +27,7 @@ func NewArticleLikeNumLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ar
 }
 
 func (l *ArticleLikeNumLogic) Consume(ctx context.Context, key string, val string) error {
+	fmt.Println("原始数据：", val)
 	var msg *types.CanalLikeMsg
 	err := json.Unmarshal([]byte(val), &msg)
 	if err != nil {
@@ -45,7 +47,7 @@ func (l *ArticleLikeNumLogic) updateArticleLikeNum(ctx context.Context, msg *typ
 		if d.BizID != types.ArticleBizID {
 			continue
 		}
-		id, err := strconv.ParseInt(d.ObjID, 10, 64)
+		id, err := strconv.ParseInt(d.TargetId, 10, 64)
 		if err != nil {
 			logx.Errorf("strconv.ParseInt id: %s error: %v", d.ID, err)
 			continue

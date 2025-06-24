@@ -39,6 +39,11 @@ func (l *ThumbupLogic) Consume(ctx context.Context, key, val string) error {
 		return nil
 	}
 
+	if msg.Action == "" || msg.ObjId == 0 || msg.UserId == 0 {
+		logx.Infof("[Thumbup] 忽略非法消息: %+v", msg)
+		return nil
+	}
+
 	l.Infof("[Kafka][Thumbup] 收到行为: action=%s biz=%s target=%d user=%d type=%d", msg.Action, msg.BizId, msg.ObjId, msg.UserId, msg.LikeType)
 
 	var err error

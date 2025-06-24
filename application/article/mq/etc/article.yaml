@@ -2,22 +2,17 @@ Name: mq
 KqConsumerConf:
   Name: article-kq-consumer
   Brokers:
-    - 127.0.1:9092
+    - 127.0.0.1:9092
   Group: group-like-count
   Topic: topic-like-count
   Offset: last
   Consumers: 1
   Processors: 1
 DataSource: kanolity:1234@tcp(127.0.0.1:3306)/beyond_article?parseTime=true
-CacheRedis:
-  - Host: 127.0.0.1:6379
-    Pass:
-    Type: node
-
 ArticleKqConsumerConf:
   Name: article-cache-kq-consumer
   Brokers:
-    - 127.0.1:9092
+    - 127.0.0.1:9092
   Group: group-article-event
   Topic: topic-article-event
   Offset: last
@@ -36,8 +31,8 @@ Prometheus:
   Host: 0.0.0.0
   Port: 9101
   Path: /metrics
-Telemetry:
-  Endpoint: http://127.0.0.1:14268/api/traces
+#Telemetry:
+#  Endpoint: http://127.0.0.1:14268/api/traces
 UserRPC:
   Etcd:
     Hosts:

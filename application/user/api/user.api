@@ -42,6 +42,14 @@ type (
 		NewPassword string `json:"new_password"`
 	}
 	ChangePasswordResponse  {}
+	GetOtherInfoRequest {
+		UserId int64 `form:"user_id"`
+	}
+	GetOtherInfoResponse {
+		UserId   int64  `json:"user_id"`
+		Username string `json:"username"`
+		Avatar   string `json:"avatar"`
+	}
 )
 
 @server (
@@ -72,8 +80,11 @@ service user-api {
 
 	@handler ChangePassword
 	put /change_password (ChangePasswordRequest) returns (ChangePasswordResponse)
+
+	@handler GetOtherInfo
+	get /info/other (GetOtherInfoRequest) returns (GetOtherInfoResponse)
 }
 
-	//游客账号
-	//username:traveller
-	//password:1234
+//游客账号
+//username:traveller
+//password:1234

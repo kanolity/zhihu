@@ -15,10 +15,10 @@ type Config struct {
 	Datasource            string
 	BizRedis              redis.RedisConf
 	// es config
-	Es struct {
-		Addresses []string
-		Username  string
-		Password  string
-	}
+	//Es struct {
+	//	Addresses []string
+	//	Username  string
+	//	Password  string
+	//}
 	UserRPC zrpc.RpcClientConf
 }

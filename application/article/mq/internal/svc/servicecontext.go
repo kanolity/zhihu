@@ -14,7 +14,7 @@ type ServiceContext struct {
 	ArticleModel model.ArticleModel
 	BizRedis     *redis.Redis
 	UserRPC      userclient.User
-	Es           *es.Es
+	//Es           *es.Es
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -33,10 +33,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		ArticleModel: model.NewArticleModel(conn),
 		BizRedis:     rds,
 		UserRPC:      userclient.NewUser(zrpc.MustNewClient(c.UserRPC)),
-		Es: es.MustNewEs(&es.Config{
-			Addresses: c.Es.Addresses,
-			Username:  c.Es.Username,
-			Password:  c.Es.Password,
-		}),
+		//Es: es.MustNewEs(&es.Config{
+		//	Addresses: c.Es.Addresses,
+		//	Username:  c.Es.Username,
+		//	Password:  c.Es.Password,
+		//}),
 	}
 }

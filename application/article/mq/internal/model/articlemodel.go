@@ -3,7 +3,6 @@ package model
 import (
 	"context"
 	"fmt"
-	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
@@ -14,6 +13,7 @@ type (
 	// and implement the added methods in customArticleModel.
 	ArticleModel interface {
 		articleModel
+		withSession(session sqlx.Session) ArticleModel
 		UpdateLikeNum(ctx context.Context, id, likeNum int64) error
 	}
 
@@ -23,10 +23,14 @@ type (
 )
 
 // NewArticleModel returns a model for the database table.
-func NewArticleModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) ArticleModel {
+func NewArticleModel(conn sqlx.SqlConn) ArticleModel {
 	return &customArticleModel{
 		defaultArticleModel: newArticleModel(conn),
 	}
+}
+
+func (m *customArticleModel) withSession(session sqlx.Session) ArticleModel {
+	return NewArticleModel(sqlx.NewSqlConnFromSession(session))
 }
 
 func (m *customArticleModel) UpdateLikeNum(ctx context.Context, id, likeNum int64) error {
