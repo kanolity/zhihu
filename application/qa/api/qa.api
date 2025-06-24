@@ -1,9 +1,67 @@
 syntax = "v1"
 
-info(
-    title: "type title here"
-    desc: "type desc here"
-    author: "type author here"
-    email: "type email here"
-    version: "type version here"
+type (
+	CreateQuestionReq {
+		UserId      int64  `json:"user_id"`
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	}
+	CreateQuestionResp {
+		Id int64 `json:"id"`
+	}
+	GetQuestionReq {
+		Id int64 `form:"id"`
+	}
+	Question {
+		Id          int64  `json:"id"`
+		UserId      int64  `json:"user_id"`
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		IsResolved  bool   `json:"is_resolved"`
+		CreateTime  string `json:"create_time"`
+	}
+	GetQuestionResp {
+		Question Question `json:"question"`
+	}
+	AnswerReq {
+		QuestionId int64  `json:"question_id"`
+		UserId     int64  `json:"user_id"`
+		Content    string `json:"content"`
+	}
+	AnswerResp {
+		Id int64 `json:"id"`
+	}
+	GetAnswersReq {
+		QuestionId int64 `form:"question_id"`
+		Cursor     int64 `form:"cursor"`
+		Limit      int64 `form:"limit"`
+	}
+	Answer {
+		Id         int64  `json:"id"`
+		QuestionId int64  `json:"question_id"`
+		UserId     int64  `json:"user_id"`
+		Content    string `json:"content"`
+		CreateTime string `json:"create_time"`
+	}
+	GetAnswersResp {
+		Answers []Answer `json:"answers"`
+		HasMore bool     `json:"has_more"`
+	}
 )
+
+@server (
+	prefix: /api/qa
+)
+service qa-api {
+	@handler createQuestion
+	post /question/create (CreateQuestionReq) returns (CreateQuestionResp)
+
+	@handler getQuestion
+	get /question/detail (GetQuestionReq) returns (GetQuestionResp)
+
+	@handler answerQuestion
+	post /answer (AnswerReq) returns (AnswerResp)
+
+	@handler getAnswers
+	get /answer/list (GetAnswersReq) returns (GetAnswersResp)
+}

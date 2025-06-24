@@ -16,19 +16,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/chat/message/send",
+				Path:    "/message/send",
 				Handler: sendMessageHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/chat/messages/list",
+				Path:    "/messages/list",
 				Handler: getMessagesHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/chat/session/create",
+				Path:    "/session/create",
 				Handler: createSessionHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/chat"),
 	)
 }

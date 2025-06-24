@@ -1,0 +1,58 @@
+syntax = "v1"
+
+type (
+	CreateTagReq {
+		TagName string `json:"tag_name"`
+		TagDesc string `json:"tag_desc"`
+	}
+	CreateTagResp {
+		Id int64 `json:"id"`
+	}
+	ListTagReq {
+		Cursor int64 `form:"cursor"`
+		Limit  int64 `form:"limit"`
+	}
+	Tag {
+		Id         int64  `json:"id"`
+		TagName    string `json:"tag_name"`
+		TagDesc    string `json:"tag_desc"`
+		CreateTime string `json:"create_time"`
+	}
+	ListTagResp {
+		Tags    []Tag `json:"tags"`
+		HasMore bool  `json:"has_more"`
+	}
+	AddTagToResourceReq {
+		BizId    string `json:"biz_id"`
+		TargetId int64  `json:"target_id"`
+		TagId    int64  `json:"tag_id"`
+		UserId   int64  `json:"user_id"`
+	}
+	AddTagToResourceResp  {}
+	GetResourceTagsReq {
+		BizId    string `form:"biz_id"`
+		TargetId int64  `form:"target_id"`
+	}
+	GetResourceTagsResp {
+		Tags []Tag `json:"tags"`
+	}
+)
+
+@server (
+	prefix: /api/tag
+	jwt:    Auth
+)
+service tag-api {
+	@handler createTag
+	post /create (CreateTagReq) returns (CreateTagResp)
+
+	@handler listTag
+	get /list (ListTagReq) returns (ListTagResp)
+
+	@handler addTagToResource
+	post /bind (AddTagToResourceReq) returns (AddTagToResourceResp)
+
+	@handler getResourceTags
+	get /resource/tags (GetResourceTagsReq) returns (GetResourceTagsResp)
+}
+

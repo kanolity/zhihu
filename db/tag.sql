@@ -24,7 +24,8 @@ CREATE TABLE `tag_resource`
     `create_time` timestamp           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` timestamp           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
     PRIMARY KEY (`id`),
-    KEY `ix_update_time` (`update_time`)
+    KEY `ix_update_time` (`update_time`),
+    UNIQUE KEY ux_biz_target_tag (biz_id, target_id, tag_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_bin COMMENT ='标签资源表';

@@ -17,7 +17,7 @@ type (
 	SendMessageResp  {}
 	GetMessagesReq {
 		SessionId int64 `form:"session_id"`
-		Cursor    int64 `form:"cursor"`//最后一条消息的id
+		Cursor    int64 `form:"cursor"` //最后一条消息的id
 		Limit     int64 `form:"limit"`
 	}
 	Message {
@@ -34,14 +34,18 @@ type (
 	}
 )
 
+@server (
+	prefix: /api/chat
+	jwt:    Auth
+)
 service chat-api {
 	@handler createSession
-	post /api/chat/session/create (CreateSessionReq) returns (CreateSessionResp)
+	post /session/create (CreateSessionReq) returns (CreateSessionResp)
 
 	@handler sendMessage
-	post /api/chat/message/send (SendMessageReq) returns (SendMessageResp)
+	post /message/send (SendMessageReq) returns (SendMessageResp)
 
 	@handler getMessages
-	get /api/chat/messages/list (GetMessagesReq) returns (GetMessagesResp)
+	get /messages/list (GetMessagesReq) returns (GetMessagesResp)
 }
 

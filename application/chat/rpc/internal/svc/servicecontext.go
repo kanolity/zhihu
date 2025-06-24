@@ -13,7 +13,7 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	conn := sqlx.NewMysql(c.Datasource)
+	conn := sqlx.NewMysql(c.DataSource)
 	return &ServiceContext{
 		Config:       c,
 		SessionModel: model.NewChatSessionModel(conn),

@@ -1,0 +1,8 @@
+Name: tag-api
+Host: 0.0.0.0
+Port: 8888
+TagRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tag.rpc

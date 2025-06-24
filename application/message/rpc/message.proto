@@ -1,5 +1,52 @@
 syntax = "proto3";
 
-package template;
+package message;
+option go_package = "./message";
 
-option go_package = "./template";
+// 发送消息
+message SendMessageRequest {
+  int32 type = 1;
+  string biz_id = 2;
+  int64 target_id = 3;
+  int64 receiver_id = 4;
+  string title = 5;
+  string content = 6;
+}
+
+message SendMessageReply {}
+
+// 获取消息列表
+message GetMessagesRequest {
+  int64 receiver_id = 1;
+  int64 cursor = 2;
+  int64 limit = 3;
+}
+
+message Message {
+  int64 id = 1;
+  int32 type = 2;
+  string biz_id = 3;
+  int64 target_id = 4;
+  string title = 5;
+  string content = 6;
+  bool is_read = 7;
+  string create_time = 8;
+}
+
+message GetMessagesReply {
+  repeated Message messages = 1;
+  bool has_more = 2;
+}
+
+// 标记为已读
+message MarkAsReadRequest {
+  int64 id = 1;
+}
+
+message MarkAsReadReply {}
+
+service MessageService {
+  rpc SendMessage(SendMessageRequest) returns (SendMessageReply);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesReply);
+  rpc MarkAsRead(MarkAsReadRequest) returns (MarkAsReadReply);
+}

@@ -14,7 +14,7 @@ type CreateSessionResp struct {
 
 type GetMessagesReq struct {
 	SessionId int64 `form:"session_id"`
-	Cursor    int64 `form:"cursor"`
+	Cursor    int64 `form:"cursor"` //最后一条消息的id
 	Limit     int64 `form:"limit"`
 }
 

@@ -1,0 +1,14 @@
+Name: reply-api
+Host: 0.0.0.0
+Port: 8888
+ReplyRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: reply.rpc
+Auth:
+  AccessSecret: qazwsxedc
+  AccessExpire: 604800
+  RefreshSecret: qazwsxedc
+  RefreshExpire: 2592000
+  RefreshAfter: 604800

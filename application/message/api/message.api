@@ -1,9 +1,52 @@
 syntax = "v1"
 
-info(
-    title: "type title here"
-    desc: "type desc here"
-    author: "type author here"
-    email: "type email here"
-    version: "type version here"
+type (
+	SendMessageReq {
+		Type       int32  `json:"type"` // 类型，如 0系统消息、1点赞、2评论
+		BizId      string `json:"biz_id"` // 业务ID
+		TargetId   int64  `json:"target_id"` // 内容ID
+		ReceiverId int64  `json:"receiver_id"` // 接收者
+		Title      string `json:"title"`
+		Content    string `json:"content"`
+	}
+	SendMessageResp  {}
+	GetMessagesReq {
+		ReceiverId int64 `form:"receiver_id"`
+		Cursor     int64 `form:"cursor"`
+		Limit      int64 `form:"limit"`
+	}
+	Message {
+		Id         int64  `json:"id"`
+		Type       int32  `json:"type"`
+		BizId      string `json:"biz_id"`
+		TargetId   int64  `json:"target_id"`
+		Title      string `json:"title"`
+		Content    string `json:"content"`
+		IsRead     bool   `json:"is_read"`
+		CreateTime string `json:"create_time"`
+	}
+	GetMessagesResp {
+		Messages []Message `json:"messages"`
+		HasMore  bool      `json:"has_more"`
+	}
+	MarkAsReadReq {
+		Id int64 `json:"id"`
+	}
+	MarkAsReadResp  {}
 )
+
+@server (
+	prefix: /api/message
+	Jwt:    Auth
+)
+service message-api {
+	@handler sendMessage
+	post /send (SendMessageReq) returns (SendMessageResp)
+
+	@handler getMessages
+	get /list (GetMessagesReq) returns (GetMessagesResp)
+
+	@handler markAsRead
+	post /read (MarkAsReadReq) returns (MarkAsReadResp)
+}
+

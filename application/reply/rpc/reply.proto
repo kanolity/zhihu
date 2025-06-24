@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package reply;
+option go_package = "./reply";
+
+// 评论写入
+message PostReplyRequest {
+  string biz_id = 1;
+  int64 target_id = 2;
+  int64 reply_user_id = 3;
+  int64 be_reply_user_id = 4;
+  int64 parent_id = 5;
+  string content = 6;
+}
+
+message PostReplyReply {
+  int64 id = 1;
+}
+
+// 评论列表（游标分页）
+message GetRepliesRequest {
+  string biz_id = 1;
+  int64 target_id = 2;
+  int64 cursor = 3;
+  int64 limit = 4;
+}
+
+message Reply {
+  int64 id = 1;
+  string biz_id = 2;
+  int64 target_id = 3;
+  int64 reply_user_id = 4;
+  int64 be_reply_user_id = 5;
+  int64 parent_id = 6;
+  string content = 7;
+  int64 like_num = 8;
+  bool is_deleted = 9;
+  string create_time = 10;
+}
+
+message GetRepliesReply {
+  repeated Reply replies = 1;
+  bool has_more = 2;
+}
+
+service ReplyService {
+  rpc PostReply(PostReplyRequest) returns (PostReplyReply);
+  rpc GetReplies(GetRepliesRequest) returns (GetRepliesReply);
+}
