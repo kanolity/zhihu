@@ -3,6 +3,10 @@
 
 package types
 
+type Token struct {
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+}
 type ChangeAvatarRequest struct {
 	Avatar string `json:"avatar"`
 }
@@ -34,8 +38,8 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	UserId int64  `json:"user_id"`
-	Token  string `json:"token"`
+	UserId int64 `json:"user_id"`
+	Token  Token `json:"token"`
 }
 
 type RegisterRequest struct {
@@ -46,8 +50,8 @@ type RegisterRequest struct {
 }
 
 type RegisterResponse struct {
-	UserId int64  `json:"user_id"`
-	Token  string `json:"token"`
+	UserId int64 `json:"user_id"`
+	Token  Token `json:"token"`
 }
 
 type UserInfoResponse struct {

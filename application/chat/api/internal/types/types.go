@@ -3,6 +3,13 @@
 
 package types
 
+type ChatList struct {
+	LatestMessage Message `json:"latest_message"`
+	TargetUserId  int64   `json:"target_user_id"`
+	Username      string  `json:"username"`
+	Avatar        string  `json:"avatar"`
+}
+
 type CreateSessionReq struct {
 	User1Id int64 `json:"user1_id"`
 	User2Id int64 `json:"user2_id"`
@@ -10,6 +17,16 @@ type CreateSessionReq struct {
 
 type CreateSessionResp struct {
 	SessionId int64 `json:"session_id"`
+}
+
+type GetChatListReq struct {
+	Cursor int64 `form:"cursor"`
+	Limit  int32 `form:"limit"`
+}
+
+type GetChatListResponse struct {
+	Chats   []ChatList `json:"chats"`
+	HasMore bool       `json:"has_more"`
 }
 
 type GetMessagesReq struct {

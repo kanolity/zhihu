@@ -2,6 +2,8 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
+	"go_code/zhihu/application/chat/api/internal/code"
 	"go_code/zhihu/application/chat/rpc/types/chat"
 
 	"go_code/zhihu/application/chat/api/internal/svc"
@@ -25,10 +27,15 @@ func NewGetMessagesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMe
 }
 
 func (l *GetMessagesLogic) GetMessages(req *types.GetMessagesReq) (resp *types.GetMessagesResp, err error) {
+	userId, err := l.ctx.Value("userId").(json.Number).Int64()
+	if err != nil || userId <= 0 {
+		return nil, code.InvalidUserId
+	}
 	response, err := l.svcCtx.ChatRpc.GetMessages(l.ctx, &chat.GetMessagesRequest{
 		SessionId: req.SessionId,
 		Cursor:    req.Cursor,
 		Limit:     req.Limit,
+		UserId:    userId,
 	})
 	if err != nil {
 		return nil, err

@@ -57,3 +57,8 @@ func (s *UserServer) ChangePassword(ctx context.Context, in *user.ChangePassword
 	l := logic.NewChangePasswordLogic(ctx, s.svcCtx)
 	return l.ChangePassword(in)
 }
+
+func (s *UserServer) BatchGetUsers(ctx context.Context, in *user.BatchGetUsersRequest) (*user.BatchGetUsersResponse, error) {
+	l := logic.NewBatchGetUsersLogic(ctx, s.svcCtx)
+	return l.BatchGetUsers(in)
+}

@@ -17,5 +17,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:       c,
 		SessionModel: model.NewChatSessionModel(conn),
+		MessageModel: model.NewChatMessageModel(conn),
 	}
 }

@@ -15,4 +15,5 @@ type Config struct {
 		RefreshAfter  int64
 	}
 	ChatRPC zrpc.RpcClientConf
+	UserRPC zrpc.RpcClientConf
 }

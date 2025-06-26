@@ -32,6 +32,20 @@ type (
 		Messages []Message `json:"messages"`
 		HasMore  bool      `json:"has_more"`
 	}
+	GetChatListReq {
+		Cursor int64 `form:"cursor"`
+		Limit  int32 `form:"limit"`
+	}
+	GetChatListResponse {
+		Chats   []ChatList `json:"chats"`
+		HasMore bool       `json:"has_more"`
+	}
+	ChatList {
+		LatestMessage Message `json:"latest_message"`
+		TargetUserId  int64   `json:"target_user_id"`
+		Username      string  `json:"username"`
+		Avatar        string  `json:"avatar"`
+	}
 )
 
 @server (
@@ -47,5 +61,8 @@ service chat-api {
 
 	@handler getMessages
 	get /messages/list (GetMessagesReq) returns (GetMessagesResp)
+
+	@handler chatList
+	get /chat/list (GetChatListReq) returns (GetChatListResponse)
 }
 

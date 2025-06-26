@@ -741,6 +741,154 @@ func (*ChangePasswordResponse) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{13}
 }
 
+type BatchGetUsersRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserIds       []int64                `protobuf:"varint,1,rep,packed,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetUsersRequest) Reset() {
+	*x = BatchGetUsersRequest{}
+	mi := &file_user_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetUsersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetUsersRequest) ProtoMessage() {}
+
+func (x *BatchGetUsersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetUsersRequest.ProtoReflect.Descriptor instead.
+func (*BatchGetUsersRequest) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *BatchGetUsersRequest) GetUserIds() []int64 {
+	if x != nil {
+		return x.UserIds
+	}
+	return nil
+}
+
+type BatchGetUsersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Users         []*UserInfo            `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetUsersResponse) Reset() {
+	*x = BatchGetUsersResponse{}
+	mi := &file_user_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetUsersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetUsersResponse) ProtoMessage() {}
+
+func (x *BatchGetUsersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetUsersResponse.ProtoReflect.Descriptor instead.
+func (*BatchGetUsersResponse) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *BatchGetUsersResponse) GetUsers() []*UserInfo {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+type UserInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Avatar        string                 `protobuf:"bytes,3,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserInfo) Reset() {
+	*x = UserInfo{}
+	mi := &file_user_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserInfo) ProtoMessage() {}
+
+func (x *UserInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_user_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserInfo.ProtoReflect.Descriptor instead.
+func (*UserInfo) Descriptor() ([]byte, []int) {
+	return file_user_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *UserInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UserInfo) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UserInfo) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
 var File_user_proto protoreflect.FileDescriptor
 
 const file_user_proto_rawDesc = "" +
@@ -787,7 +935,15 @@ const file_user_proto_rawDesc = "" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12 \n" +
 	"\vOldPassword\x18\x02 \x01(\tR\vOldPassword\x12 \n" +
 	"\vNewPassword\x18\x03 \x01(\tR\vNewPassword\"\x18\n" +
-	"\x16ChangePasswordResponse2\xdc\x03\n" +
+	"\x16ChangePasswordResponse\"1\n" +
+	"\x14BatchGetUsersRequest\x12\x19\n" +
+	"\buser_ids\x18\x01 \x03(\x03R\auserIds\"=\n" +
+	"\x15BatchGetUsersResponse\x12$\n" +
+	"\x05users\x18\x01 \x03(\v2\x0e.user.UserInfoR\x05users\"N\n" +
+	"\bUserInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x16\n" +
+	"\x06avatar\x18\x03 \x01(\tR\x06avatar2\xa6\x04\n" +
 	"\x04User\x129\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x16.user.RegisterResponse\x129\n" +
 	"\bFindById\x12\x15.user.FindByIdRequest\x1a\x16.user.FindByIdResponse\x12E\n" +
@@ -795,7 +951,8 @@ const file_user_proto_rawDesc = "" +
 	"\x0eFindByUsername\x12\x1b.user.FindByUsernameRequest\x1a\x1c.user.FindByUsernameResponse\x126\n" +
 	"\aSendSms\x12\x14.user.SendSmsRequest\x1a\x15.user.SendSmsResponse\x12E\n" +
 	"\fChangeAvatar\x12\x19.user.ChangeAvatarRequest\x1a\x1a.user.ChangeAvatarResponse\x12K\n" +
-	"\x0eChangePassword\x12\x1b.user.ChangePasswordRequest\x1a\x1c.user.ChangePasswordResponseB\bZ\x06./userb\x06proto3"
+	"\x0eChangePassword\x12\x1b.user.ChangePasswordRequest\x1a\x1c.user.ChangePasswordResponse\x12H\n" +
+	"\rBatchGetUsers\x12\x1a.user.BatchGetUsersRequest\x1a\x1b.user.BatchGetUsersResponseB\bZ\x06./userb\x06proto3"
 
 var (
 	file_user_proto_rawDescOnce sync.Once
@@ -809,7 +966,7 @@ func file_user_proto_rawDescGZIP() []byte {
 	return file_user_proto_rawDescData
 }
 
-var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_user_proto_goTypes = []any{
 	(*RegisterRequest)(nil),        // 0: user.RegisterRequest
 	(*RegisterResponse)(nil),       // 1: user.RegisterResponse
@@ -825,27 +982,33 @@ var file_user_proto_goTypes = []any{
 	(*ChangeAvatarResponse)(nil),   // 11: user.ChangeAvatarResponse
 	(*ChangePasswordRequest)(nil),  // 12: user.ChangePasswordRequest
 	(*ChangePasswordResponse)(nil), // 13: user.ChangePasswordResponse
+	(*BatchGetUsersRequest)(nil),   // 14: user.BatchGetUsersRequest
+	(*BatchGetUsersResponse)(nil),  // 15: user.BatchGetUsersResponse
+	(*UserInfo)(nil),               // 16: user.UserInfo
 }
 var file_user_proto_depIdxs = []int32{
-	0,  // 0: user.User.Register:input_type -> user.RegisterRequest
-	2,  // 1: user.User.FindById:input_type -> user.FindByIdRequest
-	4,  // 2: user.User.FindByMobile:input_type -> user.FindByMobileRequest
-	6,  // 3: user.User.FindByUsername:input_type -> user.FindByUsernameRequest
-	8,  // 4: user.User.SendSms:input_type -> user.SendSmsRequest
-	10, // 5: user.User.ChangeAvatar:input_type -> user.ChangeAvatarRequest
-	12, // 6: user.User.ChangePassword:input_type -> user.ChangePasswordRequest
-	1,  // 7: user.User.Register:output_type -> user.RegisterResponse
-	3,  // 8: user.User.FindById:output_type -> user.FindByIdResponse
-	5,  // 9: user.User.FindByMobile:output_type -> user.FindByMobileResponse
-	7,  // 10: user.User.FindByUsername:output_type -> user.FindByUsernameResponse
-	9,  // 11: user.User.SendSms:output_type -> user.SendSmsResponse
-	11, // 12: user.User.ChangeAvatar:output_type -> user.ChangeAvatarResponse
-	13, // 13: user.User.ChangePassword:output_type -> user.ChangePasswordResponse
-	7,  // [7:14] is the sub-list for method output_type
-	0,  // [0:7] is the sub-list for method input_type
-	0,  // [0:0] is the sub-list for extension type_name
-	0,  // [0:0] is the sub-list for extension extendee
-	0,  // [0:0] is the sub-list for field type_name
+	16, // 0: user.BatchGetUsersResponse.users:type_name -> user.UserInfo
+	0,  // 1: user.User.Register:input_type -> user.RegisterRequest
+	2,  // 2: user.User.FindById:input_type -> user.FindByIdRequest
+	4,  // 3: user.User.FindByMobile:input_type -> user.FindByMobileRequest
+	6,  // 4: user.User.FindByUsername:input_type -> user.FindByUsernameRequest
+	8,  // 5: user.User.SendSms:input_type -> user.SendSmsRequest
+	10, // 6: user.User.ChangeAvatar:input_type -> user.ChangeAvatarRequest
+	12, // 7: user.User.ChangePassword:input_type -> user.ChangePasswordRequest
+	14, // 8: user.User.BatchGetUsers:input_type -> user.BatchGetUsersRequest
+	1,  // 9: user.User.Register:output_type -> user.RegisterResponse
+	3,  // 10: user.User.FindById:output_type -> user.FindByIdResponse
+	5,  // 11: user.User.FindByMobile:output_type -> user.FindByMobileResponse
+	7,  // 12: user.User.FindByUsername:output_type -> user.FindByUsernameResponse
+	9,  // 13: user.User.SendSms:output_type -> user.SendSmsResponse
+	11, // 14: user.User.ChangeAvatar:output_type -> user.ChangeAvatarResponse
+	13, // 15: user.User.ChangePassword:output_type -> user.ChangePasswordResponse
+	15, // 16: user.User.BatchGetUsers:output_type -> user.BatchGetUsersResponse
+	9,  // [9:17] is the sub-list for method output_type
+	1,  // [1:9] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_user_proto_init() }
@@ -859,7 +1022,7 @@ func file_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_proto_rawDesc), len(file_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

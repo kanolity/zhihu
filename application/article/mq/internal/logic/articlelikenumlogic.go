@@ -57,9 +57,11 @@ func (l *ArticleLikeNumLogic) updateArticleLikeNum(ctx context.Context, msg *typ
 			logx.Errorf("strconv.ParseInt likeNum: %s error: %v", d.LikeNum, err)
 			continue
 		}
+
 		err = l.svcCtx.ArticleModel.UpdateLikeNum(ctx, id, likeNum)
 		if err != nil {
-			logx.Errorf("UpdateLikeNum id: %d like: %d", id, likeNum)
+			logx.Errorf("UpdateLikeNum error, id=%d like=%d: %v", id, likeNum, err)
+			continue
 		}
 	}
 

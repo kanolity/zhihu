@@ -14,6 +14,8 @@ import (
 )
 
 type (
+	BatchGetUsersRequest   = user.BatchGetUsersRequest
+	BatchGetUsersResponse  = user.BatchGetUsersResponse
 	ChangeAvatarRequest    = user.ChangeAvatarRequest
 	ChangeAvatarResponse   = user.ChangeAvatarResponse
 	ChangePasswordRequest  = user.ChangePasswordRequest
@@ -28,6 +30,7 @@ type (
 	RegisterResponse       = user.RegisterResponse
 	SendSmsRequest         = user.SendSmsRequest
 	SendSmsResponse        = user.SendSmsResponse
+	UserInfo               = user.UserInfo
 
 	User interface {
 		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
@@ -37,6 +40,7 @@ type (
 		SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
 		ChangeAvatar(ctx context.Context, in *ChangeAvatarRequest, opts ...grpc.CallOption) (*ChangeAvatarResponse, error)
 		ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
+		BatchGetUsers(ctx context.Context, in *BatchGetUsersRequest, opts ...grpc.CallOption) (*BatchGetUsersResponse, error)
 	}
 
 	defaultUser struct {
@@ -83,4 +87,9 @@ func (m *defaultUser) ChangeAvatar(ctx context.Context, in *ChangeAvatarRequest,
 func (m *defaultUser) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.ChangePassword(ctx, in, opts...)
+}
+
+func (m *defaultUser) BatchGetUsers(ctx context.Context, in *BatchGetUsersRequest, opts ...grpc.CallOption) (*BatchGetUsersResponse, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.BatchGetUsers(ctx, in, opts...)
 }

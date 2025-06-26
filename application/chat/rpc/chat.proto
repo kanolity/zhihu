@@ -28,6 +28,7 @@ message GetMessagesRequest {
   int64 session_id = 1;
   int64 cursor = 2;//最后一条消息的id
   int64 limit = 3;
+  int64 user_id = 4;
 }
 
 message Message {
@@ -44,9 +45,27 @@ message GetMessagesReply {
   bool has_more = 2;
 }
 
+message   GetChatListRequest{
+  int64 user_id = 1;
+  int64 cursor = 2;      // 游标
+  int32 limit = 3;       // 每页条数
+}
+
+message   GetChatListResponse{
+  repeated ChatList chat_list = 1;
+  bool has_more = 2;     // 是否还有更多数据
+}
+
+message ChatList{
+  Message latest_message = 1;
+  int64 target_user_id = 2;
+}
+
+
 // ChatService 定义
 service ChatService {
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionReply);
   rpc SendMessage(SendMessageRequest) returns (SendMessageReply);
   rpc GetMessages(GetMessagesRequest) returns (GetMessagesReply);
+  rpc GetChatList(GetChatListRequest)returns(GetChatListResponse);
 }

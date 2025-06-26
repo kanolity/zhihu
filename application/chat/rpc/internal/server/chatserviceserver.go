@@ -37,3 +37,8 @@ func (s *ChatServiceServer) GetMessages(ctx context.Context, in *chat.GetMessage
 	l := logic.NewGetMessagesLogic(ctx, s.svcCtx)
 	return l.GetMessages(in)
 }
+
+func (s *ChatServiceServer) GetChatList(ctx context.Context, in *chat.GetChatListRequest) (*chat.GetChatListResponse, error) {
+	l := logic.NewGetChatListLogic(ctx, s.svcCtx)
+	return l.GetChatList(in)
+}

@@ -14,8 +14,11 @@ import (
 )
 
 type (
+	ChatList             = chat.ChatList
 	CreateSessionReply   = chat.CreateSessionReply
 	CreateSessionRequest = chat.CreateSessionRequest
+	GetChatListRequest   = chat.GetChatListRequest
+	GetChatListResponse  = chat.GetChatListResponse
 	GetMessagesReply     = chat.GetMessagesReply
 	GetMessagesRequest   = chat.GetMessagesRequest
 	Message              = chat.Message
@@ -26,6 +29,7 @@ type (
 		CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionReply, error)
 		SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageReply, error)
 		GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesReply, error)
+		GetChatList(ctx context.Context, in *GetChatListRequest, opts ...grpc.CallOption) (*GetChatListResponse, error)
 	}
 
 	defaultChatService struct {
@@ -52,4 +56,9 @@ func (m *defaultChatService) SendMessage(ctx context.Context, in *SendMessageReq
 func (m *defaultChatService) GetMessages(ctx context.Context, in *GetMessagesRequest, opts ...grpc.CallOption) (*GetMessagesReply, error) {
 	client := chat.NewChatServiceClient(m.cli.Conn())
 	return client.GetMessages(ctx, in, opts...)
+}
+
+func (m *defaultChatService) GetChatList(ctx context.Context, in *GetChatListRequest, opts ...grpc.CallOption) (*GetChatListResponse, error) {
+	client := chat.NewChatServiceClient(m.cli.Conn())
+	return client.GetChatList(ctx, in, opts...)
 }

@@ -16,6 +16,7 @@ type (
 		chatSessionModel
 		withSession(session sqlx.Session) ChatSessionModel
 		FindByUserPair(ctx context.Context, user1Id, user2Id int64) (*ChatSession, error)
+		FindUserSessions(ctx context.Context, userId int64, cursor int64, limit int) ([]*ChatSession, error)
 	}
 
 	customChatSessionModel struct {
@@ -41,4 +42,32 @@ func (m *defaultChatSessionModel) FindByUserPair(ctx context.Context, user1Id, u
 		return nil, nil
 	}
 	return &resp, err
+}
+func (m *defaultChatSessionModel) FindUserSessions(ctx context.Context, userId int64, cursor int64, limit int) ([]*ChatSession, error) {
+	query := fmt.Sprintf(`
+        SELECT id, user1, user2, updated_at
+        FROM %s
+        WHERE (user1 = ? OR user2 = ?)
+        %s
+        ORDER BY updated_at DESC
+        LIMIT ?
+    `, m.table,
+		func() string {
+			if cursor > 0 {
+				return "AND id < ?"
+			}
+			return ""
+		}(),
+	)
+
+	var args []interface{}
+	args = append(args, userId, userId)
+	if cursor > 0 {
+		args = append(args, cursor)
+	}
+	args = append(args, limit)
+
+	var sessions []*ChatSession
+	err := m.conn.QueryRowsCtx(ctx, &sessions, query, args...)
+	return sessions, err
 }
