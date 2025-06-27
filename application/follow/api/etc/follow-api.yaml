@@ -1,11 +1,11 @@
-Name: qa-api
+Name: follow-api
 Host: 0.0.0.0
 Port: 8888
-QaRPC:
+FollowRPC:
   Etcd:
     Hosts:
       - 127.0.0.1:2379
-    Key: qa.rpc
+    Key: follow.rpc
 Auth:
   AccessSecret: qazwsxedc
   AccessExpire: 604800
