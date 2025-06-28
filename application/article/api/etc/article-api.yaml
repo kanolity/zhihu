@@ -27,3 +27,8 @@ MessageRPC:
     Hosts:
       - 127.0.0.1:2379
     Key: message.rpc
+Es:
+  Addresses:
+    - http://localhost:9200/
+  Username: elastic
+  Password: "4373826"

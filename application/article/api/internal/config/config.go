@@ -18,4 +18,9 @@ type Config struct {
 	UserRPC    zrpc.RpcClientConf
 	TagRPC     zrpc.RpcClientConf
 	MessageRPC zrpc.RpcClientConf
+	Es         struct {
+		Addresses []string
+		Username  string
+		Password  string
+	}
 }

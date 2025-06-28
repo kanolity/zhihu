@@ -35,6 +35,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/publish",
 				Handler: PublishHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/search",
+				Handler: ArticleSearchHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/article"),

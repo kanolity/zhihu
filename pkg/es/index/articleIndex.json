@@ -1,0 +1,57 @@
+{
+  "mappings": {
+    "properties": {
+      "article_id": {
+        "type": "long"
+      },
+      "title": {
+        "type": "text"
+      },
+      "content": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text"
+      },
+      "author_id": {
+        "type": "long"
+      },
+      "author_name": {
+        "type": "keyword"
+      },
+      "status": {
+        "type": "integer"
+      },
+      "comment_num": {
+        "type": "long"
+      },
+      "like_num": {
+        "type": "long"
+      },
+      "collect_num": {
+        "type": "long"
+      },
+      "view_num": {
+        "type": "long"
+      },
+      "share_num": {
+        "type": "long"
+      },
+      "tag_names": {
+        "type": "keyword"
+      },
+      "publish_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "create_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      },
+      "update_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+      }
+    }
+  }
+}

@@ -26,7 +26,7 @@ Es:
   Addresses:
     - http://localhost:9200/
   Username: elastic
-  Password: HLmVfh-0Pr*YX5x4JSFl
+  Password: "4373826"
 Prometheus:
   Host: 0.0.0.0
   Port: 9101
@@ -39,3 +39,8 @@ UserRPC:
       - 127.0.0.1:2379
     Key: user.rpc
   NonBlock: true
+TagRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tag.rpc

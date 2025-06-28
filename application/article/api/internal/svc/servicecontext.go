@@ -7,6 +7,7 @@ import (
 	"go_code/zhihu/application/message/rpc/messageservice"
 	"go_code/zhihu/application/tag/rpc/tagservice"
 	"go_code/zhihu/application/user/rpc/userclient"
+	"go_code/zhihu/pkg/es"
 	"go_code/zhihu/pkg/interceptors"
 )
 
@@ -16,6 +17,7 @@ type ServiceContext struct {
 	UserRpc    userclient.User
 	TagRpc     tagservice.TagService
 	MessageRpc messageservice.MessageService
+	Es         *es.Es
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -29,5 +31,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserRpc:    userclient.NewUser(userRPC),
 		TagRpc:     tagservice.NewTagService(tagRPC),
 		MessageRpc: messageservice.NewMessageService(messageRPC),
+		Es: es.MustNewEs(&es.Config{
+			Addresses: c.Es.Addresses,
+			Username:  c.Es.Username,
+			Password:  c.Es.Password,
+		}),
 	}
 }

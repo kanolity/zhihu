@@ -14,11 +14,11 @@ type Config struct {
 	ArticleKqConsumerConf kq.KqConf
 	Datasource            string
 	BizRedis              redis.RedisConf
-	// es config
-	//Es struct {
-	//	Addresses []string
-	//	Username  string
-	//	Password  string
-	//}
+	Es                    struct {
+		Addresses []string
+		Username  string
+		Password  string
+	}
 	UserRPC zrpc.RpcClientConf
+	TagRPC  zrpc.RpcClientConf
 }
