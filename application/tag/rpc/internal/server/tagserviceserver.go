@@ -42,3 +42,8 @@ func (s *TagServiceServer) GetResourceTags(ctx context.Context, in *tag.GetResou
 	l := logic.NewGetResourceTagsLogic(ctx, s.svcCtx)
 	return l.GetResourceTags(in)
 }
+
+func (s *TagServiceServer) GetTags(ctx context.Context, in *tag.GetTagsRequest) (*tag.GetTagsResponse, error) {
+	l := logic.NewGetTagsLogic(ctx, s.svcCtx)
+	return l.GetTags(in)
+}

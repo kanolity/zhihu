@@ -58,7 +58,6 @@ func (l *ThumbupLogic) Thumbup(in *like.ThumbupRequest) (*like.ThumbupResponse, 
 		case in.LikeType != origType:
 			action = "switch"
 		default:
-			// 幂等请求，直接返回当前计数
 			cnt, _ := l.svcCtx.LikeCountModel.FindByBizTarget(l.ctx, in.BizId, in.ObjId)
 			if cnt == nil {
 				cnt = &model.LikeCount{}

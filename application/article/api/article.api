@@ -9,6 +9,7 @@ type (
 	PublishRequest {
 		Title   string `json:"title"`
 		Content string `json:"content"`
+		TagIds  string `json:"tag_ids"` //请求标签列表后，将要添加的标签id使用‘,’拼接成字符串返回
 	}
 	PublishResponse {
 		ArticleId int64 `json:"article_id"`
@@ -17,10 +18,11 @@ type (
 		ArticleId int64 `form:"article_id"`
 	}
 	ArticleDetailResponse {
-		Title      string `json:"title"`
-		Content    string `json:"content"`
-		AuthorId   string `json:"author_id"`
-		AuthorName string `json:"author_name"`
+		Title      string   `json:"title"`
+		Content    string   `json:"content"`
+		AuthorId   string   `json:"author_id"`
+		AuthorName string   `json:"author_name"`
+		TagNames   []string `json:"tag_names"`
 	}
 	ArticleListRequest {
 		AuthorId  int64 `form:"author_id"`
@@ -30,9 +32,11 @@ type (
 		ArticleId int64 `form:"article_id"`
 	}
 	ArticleInfo {
-		ArticleId int64  `json:"article_id"`
-		Title     string `json:"title"`
-		Content   string `json:"content"`
+		ArticleId int64    `json:"article_id"`
+		Title     string   `json:"title"`
+		Content   string   `json:"content"`
+		TagNames  []string `json:"tag_names"`
+		LikeNum   int64    `json:"like_num"`
 	}
 	ArticleListResponse {
 		Articles  []ArticleInfo `json:"articles"`
@@ -40,6 +44,10 @@ type (
 		ArticleId int64         `json:"article_id"` // 本页最后一条的文章 ID
 		IsEnd     bool          `json:"is_end"` // 是否已经到底
 	}
+	ArticleDeletedRequest {
+		ArticleId int64 `json:"article_id"`
+	}
+	ArticleDeletedResponse  {}
 )
 
 @server (
@@ -50,10 +58,67 @@ service article-api {
 	@handler PublishHandler
 	post /publish (PublishRequest) returns (PublishResponse)
 
+	//查询某用户的文章
 	@handler ArticleList
 	get /list (ArticleListRequest) returns (ArticleListResponse)
 
 	@handler ArticleDetail
 	get /detail (ArticleDetailRequest) returns (ArticleDetailResponse)
+
+	//TODO:加tag
+	@handler ArticleDeleted
+	put /article/deleted (ArticleDeletedRequest) returns (ArticleDeletedResponse)
 }
 
+type (
+	ArticleApproveRequest {
+		ArticleId int64 `json:"article_id"` // 待审核的文章 ID
+	}
+	ArticleApproveResponse  {}
+	ArticleLRejectRequest {
+		ArticleId int64  `json:"article_id"` // 被驳回文章 ID
+		Reason    string `json:"reason"` //驳回原因
+	}
+	ArticleLRejectResponse  {}
+	AdminListRequest {
+		Cursor    int64 `form:"cursor"` //游标，发布时间
+		ArticleId int64 `form:"article_id"`
+		PageSize  int64 `form:"page_size"`
+		Status    int64 `form:"status,optional"` //筛选状态：0=待审核, 1=驳回
+	}
+	AdminListResponse {
+		Articles  []PendingArticleItem `json:"articles"`
+		Cursor    int64                `json:"cursor"`
+		ArticleId int64                `json:"article_id"`
+		IsEnd     bool                 `json:"is_end"`
+	}
+	PendingArticleItem {
+		ArticleId  int64    `json:"article_id"`
+		Title      string   `json:"title"`
+		AuthorId   int64    `json:"author_id"`
+		AuthorName string   `json:"author_name"`
+		Status     int64    `json:"status"` // 状态
+		TagNames   []string `json:"tag_names"`
+	}
+)
+
+@server (
+	prefix: /api/article/admin
+	jwt:    Auth
+	group:  admin
+)
+service article-api {
+	@doc "审核通过"
+	@handler ArticleApprove
+	post /admin/article/approve (ArticleApproveRequest) returns (ArticleApproveResponse)
+
+	@doc "驳回文章"
+	@handler ArticleLReject
+	post /admin/article/reject (ArticleLRejectRequest) returns (ArticleLRejectResponse)
+
+	@doc "待审核列表"
+	@handler AdminList
+	get /admin/article/pending (AdminListRequest) returns (AdminListResponse)
+}
+
+//TODO: 优化获取文章列表，批量获取作者名和标签名

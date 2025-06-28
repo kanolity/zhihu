@@ -6,6 +6,7 @@ package handler
 import (
 	"net/http"
 
+	admin "go_code/zhihu/application/article/api/internal/handler/admin"
 	"go_code/zhihu/application/article/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -14,6 +15,11 @@ import (
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
+			{
+				Method:  http.MethodPut,
+				Path:    "/article/deleted",
+				Handler: ArticleDeletedHandler(serverCtx),
+			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/detail",
@@ -32,5 +38,30 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/article"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 审核通过
+				Method:  http.MethodPost,
+				Path:    "/admin/article/approve",
+				Handler: admin.ArticleApproveHandler(serverCtx),
+			},
+			{
+				// 待审核列表
+				Method:  http.MethodGet,
+				Path:    "/admin/article/pending",
+				Handler: admin.AdminListHandler(serverCtx),
+			},
+			{
+				// 驳回文章
+				Method:  http.MethodPost,
+				Path:    "/admin/article/reject",
+				Handler: admin.ArticleLRejectHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/article/admin"),
 	)
 }

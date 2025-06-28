@@ -108,6 +108,7 @@ func (l *ArticlesLogic) Articles(in *article.ArticlesRequest) (*article.Articles
 				LikeCount:    article1.LikeNum,
 				CommentCount: article1.CommentNum,
 				PublishTime:  article1.PublishTime.Unix(),
+				TagIds:       article1.TagIds,
 			})
 		}
 	} else {
@@ -131,12 +132,13 @@ func (l *ArticlesLogic) Articles(in *article.ArticlesRequest) (*article.Articles
 		}
 		for _, article1 := range firstPageArticles {
 			curPage = append(curPage, &article.ArticleItem{
-				Id:           int64(article1.Id),
+				Id:           article1.Id,
 				Title:        article1.Title,
 				Content:      article1.Content,
 				LikeCount:    article1.LikeNum,
 				CommentCount: article1.CommentNum,
 				PublishTime:  article1.PublishTime.Unix(),
+				TagIds:       article1.TagIds,
 			})
 		}
 	}

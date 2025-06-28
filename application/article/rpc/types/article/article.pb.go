@@ -26,6 +26,7 @@ type PublishRequest struct {
 	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	TagIds        string                 `protobuf:"bytes,4,opt,name=tagIds,proto3" json:"tagIds,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -81,6 +82,13 @@ func (x *PublishRequest) GetContent() string {
 	return ""
 }
 
+func (x *PublishRequest) GetTagIds() string {
+	if x != nil {
+		return x.TagIds
+	}
+	return ""
+}
+
 type PublishResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ArticleId     int64                  `protobuf:"varint,1,opt,name=articleId,proto3" json:"articleId,omitempty"`
@@ -128,9 +136,9 @@ func (x *PublishResponse) GetArticleId() int64 {
 type ArticlesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
-	Cursor        int64                  `protobuf:"varint,2,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	Cursor        int64                  `protobuf:"varint,2,opt,name=cursor,proto3" json:"cursor,omitempty"` //游标，最后一条的发布时间或点赞量
 	PageSize      int64                  `protobuf:"varint,3,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	SortType      int32                  `protobuf:"varint,4,opt,name=sortType,proto3" json:"sortType,omitempty"` //1 发布时间排序/2 点赞数量排序
+	SortType      int32                  `protobuf:"varint,4,opt,name=sortType,proto3" json:"sortType,omitempty"` // 0=发布时间，1=点赞数
 	ArticleId     int64                  `protobuf:"varint,5,opt,name=articleId,proto3" json:"articleId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -210,6 +218,7 @@ type ArticleItem struct {
 	LikeCount     int64                  `protobuf:"varint,5,opt,name=likeCount,proto3" json:"likeCount,omitempty"`
 	PublishTime   int64                  `protobuf:"varint,6,opt,name=publishTime,proto3" json:"publishTime,omitempty"`
 	AuthorId      int64                  `protobuf:"varint,7,opt,name=authorId,proto3" json:"authorId,omitempty"`
+	TagIds        string                 `protobuf:"bytes,8,opt,name=tag_ids,json=tagIds,proto3" json:"tag_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -291,6 +300,13 @@ func (x *ArticleItem) GetAuthorId() int64 {
 		return x.AuthorId
 	}
 	return 0
+}
+
+func (x *ArticleItem) GetTagIds() string {
+	if x != nil {
+		return x.TagIds
+	}
+	return ""
 }
 
 type ArticlesResponse struct {
@@ -537,15 +553,396 @@ func (x *ArticleDetailResponse) GetArticle() *ArticleItem {
 	return nil
 }
 
+type ArticleApproveRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ArticleId     int64                  `protobuf:"varint,1,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"` // 被审核文章 ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ArticleApproveRequest) Reset() {
+	*x = ArticleApproveRequest{}
+	mi := &file_article_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArticleApproveRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArticleApproveRequest) ProtoMessage() {}
+
+func (x *ArticleApproveRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArticleApproveRequest.ProtoReflect.Descriptor instead.
+func (*ArticleApproveRequest) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ArticleApproveRequest) GetArticleId() int64 {
+	if x != nil {
+		return x.ArticleId
+	}
+	return 0
+}
+
+type ArticleApproveResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ArticleApproveResponse) Reset() {
+	*x = ArticleApproveResponse{}
+	mi := &file_article_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArticleApproveResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArticleApproveResponse) ProtoMessage() {}
+
+func (x *ArticleApproveResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArticleApproveResponse.ProtoReflect.Descriptor instead.
+func (*ArticleApproveResponse) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{10}
+}
+
+type ArticleRejectRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ArticleId     int64                  `protobuf:"varint,1,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"` // 被驳回的文章 ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ArticleRejectRequest) Reset() {
+	*x = ArticleRejectRequest{}
+	mi := &file_article_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArticleRejectRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArticleRejectRequest) ProtoMessage() {}
+
+func (x *ArticleRejectRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArticleRejectRequest.ProtoReflect.Descriptor instead.
+func (*ArticleRejectRequest) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ArticleRejectRequest) GetArticleId() int64 {
+	if x != nil {
+		return x.ArticleId
+	}
+	return 0
+}
+
+type ArticleRejectResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ArticleRejectResponse) Reset() {
+	*x = ArticleRejectResponse{}
+	mi := &file_article_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArticleRejectResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArticleRejectResponse) ProtoMessage() {}
+
+func (x *ArticleRejectResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArticleRejectResponse.ProtoReflect.Descriptor instead.
+func (*ArticleRejectResponse) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{12}
+}
+
+type AdminListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Cursor        int64                  `protobuf:"varint,1,opt,name=cursor,proto3" json:"cursor,omitempty"` // 游标
+	ArticleId     int64                  `protobuf:"varint,2,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`
+	PageSize      int64                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // 每页数量
+	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                     // 筛选状态：0=待审核 1=审核不通过
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdminListRequest) Reset() {
+	*x = AdminListRequest{}
+	mi := &file_article_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdminListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdminListRequest) ProtoMessage() {}
+
+func (x *AdminListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdminListRequest.ProtoReflect.Descriptor instead.
+func (*AdminListRequest) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *AdminListRequest) GetCursor() int64 {
+	if x != nil {
+		return x.Cursor
+	}
+	return 0
+}
+
+func (x *AdminListRequest) GetArticleId() int64 {
+	if x != nil {
+		return x.ArticleId
+	}
+	return 0
+}
+
+func (x *AdminListRequest) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *AdminListRequest) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type AdminListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Articles      []*PendingArticleItem  `protobuf:"bytes,1,rep,name=articles,proto3" json:"articles,omitempty"`
+	Cursor        int64                  `protobuf:"varint,2,opt,name=cursor,proto3" json:"cursor,omitempty"`                        // 下一个分页起点（时间戳）
+	ArticleId     int64                  `protobuf:"varint,3,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"` // 下一个分页文章 ID
+	IsEnd         bool                   `protobuf:"varint,4,opt,name=is_end,json=isEnd,proto3" json:"is_end,omitempty"`             // 是否已经到底
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AdminListResponse) Reset() {
+	*x = AdminListResponse{}
+	mi := &file_article_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AdminListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AdminListResponse) ProtoMessage() {}
+
+func (x *AdminListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AdminListResponse.ProtoReflect.Descriptor instead.
+func (*AdminListResponse) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *AdminListResponse) GetArticles() []*PendingArticleItem {
+	if x != nil {
+		return x.Articles
+	}
+	return nil
+}
+
+func (x *AdminListResponse) GetCursor() int64 {
+	if x != nil {
+		return x.Cursor
+	}
+	return 0
+}
+
+func (x *AdminListResponse) GetArticleId() int64 {
+	if x != nil {
+		return x.ArticleId
+	}
+	return 0
+}
+
+func (x *AdminListResponse) GetIsEnd() bool {
+	if x != nil {
+		return x.IsEnd
+	}
+	return false
+}
+
+type PendingArticleItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ArticleId     int64                  `protobuf:"varint,1,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	AuthorId      int64                  `protobuf:"varint,3,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	TagIds        string                 `protobuf:"bytes,5,opt,name=tag_ids,json=tagIds,proto3" json:"tag_ids,omitempty"`
+	Status        int64                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	PublishTime   int64                  `protobuf:"varint,7,opt,name=publishTime,proto3" json:"publishTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PendingArticleItem) Reset() {
+	*x = PendingArticleItem{}
+	mi := &file_article_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PendingArticleItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PendingArticleItem) ProtoMessage() {}
+
+func (x *PendingArticleItem) ProtoReflect() protoreflect.Message {
+	mi := &file_article_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PendingArticleItem.ProtoReflect.Descriptor instead.
+func (*PendingArticleItem) Descriptor() ([]byte, []int) {
+	return file_article_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *PendingArticleItem) GetArticleId() int64 {
+	if x != nil {
+		return x.ArticleId
+	}
+	return 0
+}
+
+func (x *PendingArticleItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *PendingArticleItem) GetAuthorId() int64 {
+	if x != nil {
+		return x.AuthorId
+	}
+	return 0
+}
+
+func (x *PendingArticleItem) GetTagIds() string {
+	if x != nil {
+		return x.TagIds
+	}
+	return ""
+}
+
+func (x *PendingArticleItem) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *PendingArticleItem) GetPublishTime() int64 {
+	if x != nil {
+		return x.PublishTime
+	}
+	return 0
+}
+
 var File_article_proto protoreflect.FileDescriptor
 
 const file_article_proto_rawDesc = "" +
 	"\n" +
-	"\rarticle.proto\x12\aarticle\"X\n" +
+	"\rarticle.proto\x12\aarticle\"p\n" +
 	"\x0ePublishRequest\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\tR\acontent\"/\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x16\n" +
+	"\x06tagIds\x18\x04 \x01(\tR\x06tagIds\"/\n" +
 	"\x0fPublishResponse\x12\x1c\n" +
 	"\tarticleId\x18\x01 \x01(\x03R\tarticleId\"\x97\x01\n" +
 	"\x0fArticlesRequest\x12\x16\n" +
@@ -553,7 +950,7 @@ const file_article_proto_rawDesc = "" +
 	"\x06cursor\x18\x02 \x01(\x03R\x06cursor\x12\x1a\n" +
 	"\bpageSize\x18\x03 \x01(\x03R\bpageSize\x12\x1a\n" +
 	"\bsortType\x18\x04 \x01(\x05R\bsortType\x12\x1c\n" +
-	"\tarticleId\x18\x05 \x01(\x03R\tarticleId\"\xcd\x01\n" +
+	"\tarticleId\x18\x05 \x01(\x03R\tarticleId\"\xe6\x01\n" +
 	"\vArticleItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
@@ -561,7 +958,8 @@ const file_article_proto_rawDesc = "" +
 	"\fcommentCount\x18\x04 \x01(\x03R\fcommentCount\x12\x1c\n" +
 	"\tlikeCount\x18\x05 \x01(\x03R\tlikeCount\x12 \n" +
 	"\vpublishTime\x18\x06 \x01(\x03R\vpublishTime\x12\x1a\n" +
-	"\bauthorId\x18\a \x01(\x03R\bauthorId\"\x90\x01\n" +
+	"\bauthorId\x18\a \x01(\x03R\bauthorId\x12\x17\n" +
+	"\atag_ids\x18\b \x01(\tR\x06tagIds\"\x90\x01\n" +
 	"\x10ArticlesResponse\x120\n" +
 	"\barticles\x18\x01 \x03(\v2\x14.article.ArticleItemR\barticles\x12\x14\n" +
 	"\x05isEnd\x18\x02 \x01(\bR\x05isEnd\x12\x16\n" +
@@ -574,12 +972,43 @@ const file_article_proto_rawDesc = "" +
 	"\x14ArticleDetailRequest\x12\x1c\n" +
 	"\tarticleId\x18\x01 \x01(\x03R\tarticleId\"G\n" +
 	"\x15ArticleDetailResponse\x12.\n" +
-	"\aarticle\x18\x01 \x01(\v2\x14.article.ArticleItemR\aarticle2\xa8\x02\n" +
+	"\aarticle\x18\x01 \x01(\v2\x14.article.ArticleItemR\aarticle\"6\n" +
+	"\x15ArticleApproveRequest\x12\x1d\n" +
+	"\n" +
+	"article_id\x18\x01 \x01(\x03R\tarticleId\"\x18\n" +
+	"\x16ArticleApproveResponse\"5\n" +
+	"\x14ArticleRejectRequest\x12\x1d\n" +
+	"\n" +
+	"article_id\x18\x01 \x01(\x03R\tarticleId\"\x17\n" +
+	"\x15ArticleRejectResponse\"~\n" +
+	"\x10AdminListRequest\x12\x16\n" +
+	"\x06cursor\x18\x01 \x01(\x03R\x06cursor\x12\x1d\n" +
+	"\n" +
+	"article_id\x18\x02 \x01(\x03R\tarticleId\x12\x1b\n" +
+	"\tpage_size\x18\x03 \x01(\x03R\bpageSize\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x03R\x06status\"\x9a\x01\n" +
+	"\x11AdminListResponse\x127\n" +
+	"\barticles\x18\x01 \x03(\v2\x1b.article.PendingArticleItemR\barticles\x12\x16\n" +
+	"\x06cursor\x18\x02 \x01(\x03R\x06cursor\x12\x1d\n" +
+	"\n" +
+	"article_id\x18\x03 \x01(\x03R\tarticleId\x12\x15\n" +
+	"\x06is_end\x18\x04 \x01(\bR\x05isEnd\"\xb9\x01\n" +
+	"\x12PendingArticleItem\x12\x1d\n" +
+	"\n" +
+	"article_id\x18\x01 \x01(\x03R\tarticleId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1b\n" +
+	"\tauthor_id\x18\x03 \x01(\x03R\bauthorId\x12\x17\n" +
+	"\atag_ids\x18\x05 \x01(\tR\x06tagIds\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x03R\x06status\x12 \n" +
+	"\vpublishTime\x18\a \x01(\x03R\vpublishTime2\x98\x04\n" +
 	"\aArticle\x12<\n" +
 	"\aPublish\x12\x17.article.PublishRequest\x1a\x18.article.PublishResponse\x12?\n" +
 	"\bArticles\x12\x18.article.ArticlesRequest\x1a\x19.article.ArticlesResponse\x12N\n" +
 	"\rArticleDelete\x12\x1d.article.ArticleDeleteRequest\x1a\x1e.article.ArticleDeleteResponse\x12N\n" +
-	"\rArticleDetail\x12\x1d.article.ArticleDetailRequest\x1a\x1e.article.ArticleDetailResponseB\vZ\t./articleb\x06proto3"
+	"\rArticleDetail\x12\x1d.article.ArticleDetailRequest\x1a\x1e.article.ArticleDetailResponse\x12Q\n" +
+	"\x0eApproveArticle\x12\x1e.article.ArticleApproveRequest\x1a\x1f.article.ArticleApproveResponse\x12N\n" +
+	"\rRejectArticle\x12\x1d.article.ArticleRejectRequest\x1a\x1e.article.ArticleRejectResponse\x12K\n" +
+	"\x12GetPendingArticles\x12\x19.article.AdminListRequest\x1a\x1a.article.AdminListResponseB\vZ\t./articleb\x06proto3"
 
 var (
 	file_article_proto_rawDescOnce sync.Once
@@ -593,34 +1022,48 @@ func file_article_proto_rawDescGZIP() []byte {
 	return file_article_proto_rawDescData
 }
 
-var file_article_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_article_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_article_proto_goTypes = []any{
-	(*PublishRequest)(nil),        // 0: article.PublishRequest
-	(*PublishResponse)(nil),       // 1: article.PublishResponse
-	(*ArticlesRequest)(nil),       // 2: article.ArticlesRequest
-	(*ArticleItem)(nil),           // 3: article.ArticleItem
-	(*ArticlesResponse)(nil),      // 4: article.ArticlesResponse
-	(*ArticleDeleteRequest)(nil),  // 5: article.ArticleDeleteRequest
-	(*ArticleDeleteResponse)(nil), // 6: article.ArticleDeleteResponse
-	(*ArticleDetailRequest)(nil),  // 7: article.ArticleDetailRequest
-	(*ArticleDetailResponse)(nil), // 8: article.ArticleDetailResponse
+	(*PublishRequest)(nil),         // 0: article.PublishRequest
+	(*PublishResponse)(nil),        // 1: article.PublishResponse
+	(*ArticlesRequest)(nil),        // 2: article.ArticlesRequest
+	(*ArticleItem)(nil),            // 3: article.ArticleItem
+	(*ArticlesResponse)(nil),       // 4: article.ArticlesResponse
+	(*ArticleDeleteRequest)(nil),   // 5: article.ArticleDeleteRequest
+	(*ArticleDeleteResponse)(nil),  // 6: article.ArticleDeleteResponse
+	(*ArticleDetailRequest)(nil),   // 7: article.ArticleDetailRequest
+	(*ArticleDetailResponse)(nil),  // 8: article.ArticleDetailResponse
+	(*ArticleApproveRequest)(nil),  // 9: article.ArticleApproveRequest
+	(*ArticleApproveResponse)(nil), // 10: article.ArticleApproveResponse
+	(*ArticleRejectRequest)(nil),   // 11: article.ArticleRejectRequest
+	(*ArticleRejectResponse)(nil),  // 12: article.ArticleRejectResponse
+	(*AdminListRequest)(nil),       // 13: article.AdminListRequest
+	(*AdminListResponse)(nil),      // 14: article.AdminListResponse
+	(*PendingArticleItem)(nil),     // 15: article.PendingArticleItem
 }
 var file_article_proto_depIdxs = []int32{
-	3, // 0: article.ArticlesResponse.articles:type_name -> article.ArticleItem
-	3, // 1: article.ArticleDetailResponse.article:type_name -> article.ArticleItem
-	0, // 2: article.Article.Publish:input_type -> article.PublishRequest
-	2, // 3: article.Article.Articles:input_type -> article.ArticlesRequest
-	5, // 4: article.Article.ArticleDelete:input_type -> article.ArticleDeleteRequest
-	7, // 5: article.Article.ArticleDetail:input_type -> article.ArticleDetailRequest
-	1, // 6: article.Article.Publish:output_type -> article.PublishResponse
-	4, // 7: article.Article.Articles:output_type -> article.ArticlesResponse
-	6, // 8: article.Article.ArticleDelete:output_type -> article.ArticleDeleteResponse
-	8, // 9: article.Article.ArticleDetail:output_type -> article.ArticleDetailResponse
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	3,  // 0: article.ArticlesResponse.articles:type_name -> article.ArticleItem
+	3,  // 1: article.ArticleDetailResponse.article:type_name -> article.ArticleItem
+	15, // 2: article.AdminListResponse.articles:type_name -> article.PendingArticleItem
+	0,  // 3: article.Article.Publish:input_type -> article.PublishRequest
+	2,  // 4: article.Article.Articles:input_type -> article.ArticlesRequest
+	5,  // 5: article.Article.ArticleDelete:input_type -> article.ArticleDeleteRequest
+	7,  // 6: article.Article.ArticleDetail:input_type -> article.ArticleDetailRequest
+	9,  // 7: article.Article.ApproveArticle:input_type -> article.ArticleApproveRequest
+	11, // 8: article.Article.RejectArticle:input_type -> article.ArticleRejectRequest
+	13, // 9: article.Article.GetPendingArticles:input_type -> article.AdminListRequest
+	1,  // 10: article.Article.Publish:output_type -> article.PublishResponse
+	4,  // 11: article.Article.Articles:output_type -> article.ArticlesResponse
+	6,  // 12: article.Article.ArticleDelete:output_type -> article.ArticleDeleteResponse
+	8,  // 13: article.Article.ArticleDetail:output_type -> article.ArticleDetailResponse
+	10, // 14: article.Article.ApproveArticle:output_type -> article.ArticleApproveResponse
+	12, // 15: article.Article.RejectArticle:output_type -> article.ArticleRejectResponse
+	14, // 16: article.Article.GetPendingArticles:output_type -> article.AdminListResponse
+	10, // [10:17] is the sub-list for method output_type
+	3,  // [3:10] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_article_proto_init() }
@@ -634,7 +1077,7 @@ func file_article_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_article_proto_rawDesc), len(file_article_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

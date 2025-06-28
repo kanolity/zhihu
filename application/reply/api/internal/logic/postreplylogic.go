@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"go_code/zhihu/application/message/rpc/types/message"
 	"go_code/zhihu/application/reply/rpc/types/reply"
 
 	"go_code/zhihu/application/reply/api/internal/svc"
@@ -34,8 +35,19 @@ func (l *PostReplyLogic) PostReply(req *types.PostReplyReq) (resp *types.PostRep
 		Content:       req.Content,
 	})
 	if err != nil {
+		logx.Errorf("Post Reply  error: %v", err)
 		return nil, err
 	}
-
+	_, err = l.svcCtx.MessageRpc.SendMessage(l.ctx, &message.SendMessageRequest{
+		Type:       2,
+		BizId:      "reply",
+		TargetId:   req.TargetId,
+		ReceiverId: req.ReplyUserId,
+		Title:      "收到回复",
+		Content:    req.Content,
+	})
+	if err != nil {
+		logx.Errorf("post reply err:%v", err)
+	}
 	return &types.PostReplyResp{Id: response.Id}, nil
 }

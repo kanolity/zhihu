@@ -17,3 +17,13 @@ UserRPC:
     Hosts:
       - 127.0.0.1:2379
     Key: user.rpc
+TagRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tag.rpc
+MessageRPC:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: message.rpc

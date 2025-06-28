@@ -17,6 +17,7 @@ type (
 		withSession(session sqlx.Session) TagModel
 		ListTags(ctx context.Context, cursor, limit int64) ([]*Tag, error)
 		BatchGetTags(ctx context.Context, ids []int64) ([]*Tag, error)
+		FindNamesByIds(ctx context.Context, ids []int64) ([]*Tag, error)
 	}
 
 	customTagModel struct {
@@ -51,4 +52,23 @@ func (m *defaultTagModel) BatchGetTags(ctx context.Context, ids []int64) ([]*Tag
 	var tags []*Tag
 	err := m.conn.QueryRowsCtx(ctx, &tags, inQuery, inArgs...)
 	return tags, err
+}
+
+func (m *defaultTagModel) FindNamesByIds(ctx context.Context, ids []int64) ([]*Tag, error) {
+	if len(ids) == 0 {
+		return []*Tag{}, nil
+	}
+
+	query, args, err := sqlx2.In(fmt.Sprintf("SELECT %s FROM %s WHERE id IN (?)", tagRows, m.table), ids)
+	if err != nil {
+		return nil, err
+	}
+
+	var tags []*Tag
+	err = m.conn.QueryRowsCtx(ctx, &tags, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	return tags, nil
 }

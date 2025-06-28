@@ -46,10 +46,17 @@ message GetResourceTagsRequest {
 message GetResourceTagsReply {
   repeated Tag tags = 1;
 }
+message GetTagsRequest{
+  string tag_ids=1;
+}
+message GetTagsResponse{
+  repeated string tag_names=1;
+}
 
 service TagService {
   rpc CreateTag(CreateTagRequest) returns (CreateTagReply);
   rpc ListTag(ListTagRequest) returns (ListTagReply);
   rpc AddTagToResource(AddTagToResourceRequest) returns (AddTagToResourceReply);
   rpc GetResourceTags(GetResourceTagsRequest) returns (GetResourceTagsReply);
+  rpc GetTags(GetTagsRequest)returns(GetTagsResponse);
 }

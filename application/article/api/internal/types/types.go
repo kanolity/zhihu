@@ -3,28 +3,38 @@
 
 package types
 
+type ArticleDeletedRequest struct {
+	ArticleId int64 `json:"article_id"`
+}
+
+type ArticleDeletedResponse struct {
+}
+
 type ArticleDetailRequest struct {
 	ArticleId int64 `form:"article_id"`
 }
 
 type ArticleDetailResponse struct {
-	Title      string `json:"title"`
-	Content    string `json:"content"`
-	AuthorId   string `json:"author_id"`
-	AuthorName string `json:"author_name"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	AuthorId   string   `json:"author_id"`
+	AuthorName string   `json:"author_name"`
+	TagNames   []string `json:"tag_names"`
 }
 
 type ArticleInfo struct {
-	ArticleId int64  `json:"article_id"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
+	ArticleId int64    `json:"article_id"`
+	Title     string   `json:"title"`
+	Content   string   `json:"content"`
+	TagNames  []string `json:"tag_names"`
+	LikeNum   int64    `json:"like_num"`
 }
 
 type ArticleListRequest struct {
 	AuthorId  int64 `form:"author_id"`
 	Cursor    int64 `form:"cursor"`
 	PageSize  int64 `form:"page_size"`
-	SortType  int32 `form:"sort_type"` // 1=发布时间，2=点赞数
+	SortType  int32 `form:"sort_type"` // 0=发布时间，1=点赞数
 	ArticleId int64 `form:"article_id"`
 }
 
@@ -35,9 +45,19 @@ type ArticleListResponse struct {
 	IsEnd     bool          `json:"is_end"`     // 是否已经到底
 }
 
+type PendingArticleItem struct {
+	ArticleId  int64    `json:"article_id"`
+	Title      string   `json:"title"`
+	AuthorId   int64    `json:"author_id"`
+	AuthorName string   `json:"author_name"`
+	Status     int64    `json:"status"` // 状态码
+	TagNames   []string `json:"tag_names"`
+}
+
 type PublishRequest struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
+	TagIds  string `json:"tag_ids"` //请求标签列表后，将要添加的标签id使用‘,’拼接成字符串返回
 }
 
 type PublishResponse struct {

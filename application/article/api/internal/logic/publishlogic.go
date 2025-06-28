@@ -44,6 +44,7 @@ func (l *PublishLogic) Publish(req *types.PublishRequest) (resp *types.PublishRe
 		UserId:  userId,
 		Title:   req.Title,
 		Content: req.Content,
+		TagIds:  req.TagIds,
 	})
 	if err != nil {
 		logx.Errorf("l.svcCtx.ArticleRpc.Publish req:%v userId:%v error: %v", req, userId, err)

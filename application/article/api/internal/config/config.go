@@ -16,4 +16,6 @@ type Config struct {
 	}
 	ArticleRPC zrpc.RpcClientConf
 	UserRPC    zrpc.RpcClientConf
+	TagRPC     zrpc.RpcClientConf
+	MessageRPC zrpc.RpcClientConf
 }

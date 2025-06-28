@@ -14,21 +14,38 @@ import (
 )
 
 type (
-	ArticleDeleteRequest  = article.ArticleDeleteRequest
-	ArticleDeleteResponse = article.ArticleDeleteResponse
-	ArticleDetailRequest  = article.ArticleDetailRequest
-	ArticleDetailResponse = article.ArticleDetailResponse
-	ArticleItem           = article.ArticleItem
-	ArticlesRequest       = article.ArticlesRequest
-	ArticlesResponse      = article.ArticlesResponse
-	PublishRequest        = article.PublishRequest
-	PublishResponse       = article.PublishResponse
+	AdminListRequest       = article.AdminListRequest
+	AdminListResponse      = article.AdminListResponse
+	ArticleApproveRequest  = article.ArticleApproveRequest
+	ArticleApproveResponse = article.ArticleApproveResponse
+	ArticleDeleteRequest   = article.ArticleDeleteRequest
+	ArticleDeleteResponse  = article.ArticleDeleteResponse
+	ArticleDetailRequest   = article.ArticleDetailRequest
+	ArticleDetailResponse  = article.ArticleDetailResponse
+	ArticleItem            = article.ArticleItem
+	ArticleRejectRequest   = article.ArticleRejectRequest
+	ArticleRejectResponse  = article.ArticleRejectResponse
+	ArticlesRequest        = article.ArticlesRequest
+	ArticlesResponse       = article.ArticlesResponse
+	PendingArticleItem     = article.PendingArticleItem
+	PublishRequest         = article.PublishRequest
+	PublishResponse        = article.PublishResponse
 
 	Article interface {
+		// 发布文章
 		Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
+		// 查看某用户的所有文章
 		Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error)
+		// 删除文章
 		ArticleDelete(ctx context.Context, in *ArticleDeleteRequest, opts ...grpc.CallOption) (*ArticleDeleteResponse, error)
+		// 文章详情
 		ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error)
+		// 后台：审核通过
+		ApproveArticle(ctx context.Context, in *ArticleApproveRequest, opts ...grpc.CallOption) (*ArticleApproveResponse, error)
+		// 后台：审核驳回
+		RejectArticle(ctx context.Context, in *ArticleRejectRequest, opts ...grpc.CallOption) (*ArticleRejectResponse, error)
+		// 后台：待审核或驳回文章列表
+		GetPendingArticles(ctx context.Context, in *AdminListRequest, opts ...grpc.CallOption) (*AdminListResponse, error)
 	}
 
 	defaultArticle struct {
@@ -42,22 +59,44 @@ func NewArticle(cli zrpc.Client) Article {
 	}
 }
 
+// 发布文章
 func (m *defaultArticle) Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error) {
 	client := article.NewArticleClient(m.cli.Conn())
 	return client.Publish(ctx, in, opts...)
 }
 
+// 查看某用户的所有文章
 func (m *defaultArticle) Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error) {
 	client := article.NewArticleClient(m.cli.Conn())
 	return client.Articles(ctx, in, opts...)
 }
 
+// 删除文章
 func (m *defaultArticle) ArticleDelete(ctx context.Context, in *ArticleDeleteRequest, opts ...grpc.CallOption) (*ArticleDeleteResponse, error) {
 	client := article.NewArticleClient(m.cli.Conn())
 	return client.ArticleDelete(ctx, in, opts...)
 }
 
+// 文章详情
 func (m *defaultArticle) ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error) {
 	client := article.NewArticleClient(m.cli.Conn())
 	return client.ArticleDetail(ctx, in, opts...)
+}
+
+// 后台：审核通过
+func (m *defaultArticle) ApproveArticle(ctx context.Context, in *ArticleApproveRequest, opts ...grpc.CallOption) (*ArticleApproveResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.ApproveArticle(ctx, in, opts...)
+}
+
+// 后台：审核驳回
+func (m *defaultArticle) RejectArticle(ctx context.Context, in *ArticleRejectRequest, opts ...grpc.CallOption) (*ArticleRejectResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.RejectArticle(ctx, in, opts...)
+}
+
+// 后台：待审核或驳回文章列表
+func (m *defaultArticle) GetPendingArticles(ctx context.Context, in *AdminListRequest, opts ...grpc.CallOption) (*AdminListResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.GetPendingArticles(ctx, in, opts...)
 }

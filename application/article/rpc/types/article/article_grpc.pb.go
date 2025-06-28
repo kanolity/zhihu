@@ -19,20 +19,33 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Article_Publish_FullMethodName       = "/article.Article/Publish"
-	Article_Articles_FullMethodName      = "/article.Article/Articles"
-	Article_ArticleDelete_FullMethodName = "/article.Article/ArticleDelete"
-	Article_ArticleDetail_FullMethodName = "/article.Article/ArticleDetail"
+	Article_Publish_FullMethodName            = "/article.Article/Publish"
+	Article_Articles_FullMethodName           = "/article.Article/Articles"
+	Article_ArticleDelete_FullMethodName      = "/article.Article/ArticleDelete"
+	Article_ArticleDetail_FullMethodName      = "/article.Article/ArticleDetail"
+	Article_ApproveArticle_FullMethodName     = "/article.Article/ApproveArticle"
+	Article_RejectArticle_FullMethodName      = "/article.Article/RejectArticle"
+	Article_GetPendingArticles_FullMethodName = "/article.Article/GetPendingArticles"
 )
 
 // ArticleClient is the client API for Article service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArticleClient interface {
+	// 发布文章
 	Publish(ctx context.Context, in *PublishRequest, opts ...grpc.CallOption) (*PublishResponse, error)
+	// 查看某用户的所有文章
 	Articles(ctx context.Context, in *ArticlesRequest, opts ...grpc.CallOption) (*ArticlesResponse, error)
+	// 删除文章
 	ArticleDelete(ctx context.Context, in *ArticleDeleteRequest, opts ...grpc.CallOption) (*ArticleDeleteResponse, error)
+	// 文章详情
 	ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error)
+	// 后台：审核通过
+	ApproveArticle(ctx context.Context, in *ArticleApproveRequest, opts ...grpc.CallOption) (*ArticleApproveResponse, error)
+	// 后台：审核驳回
+	RejectArticle(ctx context.Context, in *ArticleRejectRequest, opts ...grpc.CallOption) (*ArticleRejectResponse, error)
+	// 后台：待审核或驳回文章列表
+	GetPendingArticles(ctx context.Context, in *AdminListRequest, opts ...grpc.CallOption) (*AdminListResponse, error)
 }
 
 type articleClient struct {
@@ -83,14 +96,54 @@ func (c *articleClient) ArticleDetail(ctx context.Context, in *ArticleDetailRequ
 	return out, nil
 }
 
+func (c *articleClient) ApproveArticle(ctx context.Context, in *ArticleApproveRequest, opts ...grpc.CallOption) (*ArticleApproveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ArticleApproveResponse)
+	err := c.cc.Invoke(ctx, Article_ApproveArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleClient) RejectArticle(ctx context.Context, in *ArticleRejectRequest, opts ...grpc.CallOption) (*ArticleRejectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ArticleRejectResponse)
+	err := c.cc.Invoke(ctx, Article_RejectArticle_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *articleClient) GetPendingArticles(ctx context.Context, in *AdminListRequest, opts ...grpc.CallOption) (*AdminListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminListResponse)
+	err := c.cc.Invoke(ctx, Article_GetPendingArticles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArticleServer is the server API for Article service.
 // All implementations must embed UnimplementedArticleServer
 // for forward compatibility.
 type ArticleServer interface {
+	// 发布文章
 	Publish(context.Context, *PublishRequest) (*PublishResponse, error)
+	// 查看某用户的所有文章
 	Articles(context.Context, *ArticlesRequest) (*ArticlesResponse, error)
+	// 删除文章
 	ArticleDelete(context.Context, *ArticleDeleteRequest) (*ArticleDeleteResponse, error)
+	// 文章详情
 	ArticleDetail(context.Context, *ArticleDetailRequest) (*ArticleDetailResponse, error)
+	// 后台：审核通过
+	ApproveArticle(context.Context, *ArticleApproveRequest) (*ArticleApproveResponse, error)
+	// 后台：审核驳回
+	RejectArticle(context.Context, *ArticleRejectRequest) (*ArticleRejectResponse, error)
+	// 后台：待审核或驳回文章列表
+	GetPendingArticles(context.Context, *AdminListRequest) (*AdminListResponse, error)
 	mustEmbedUnimplementedArticleServer()
 }
 
@@ -112,6 +165,15 @@ func (UnimplementedArticleServer) ArticleDelete(context.Context, *ArticleDeleteR
 }
 func (UnimplementedArticleServer) ArticleDetail(context.Context, *ArticleDetailRequest) (*ArticleDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ArticleDetail not implemented")
+}
+func (UnimplementedArticleServer) ApproveArticle(context.Context, *ArticleApproveRequest) (*ArticleApproveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApproveArticle not implemented")
+}
+func (UnimplementedArticleServer) RejectArticle(context.Context, *ArticleRejectRequest) (*ArticleRejectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RejectArticle not implemented")
+}
+func (UnimplementedArticleServer) GetPendingArticles(context.Context, *AdminListRequest) (*AdminListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPendingArticles not implemented")
 }
 func (UnimplementedArticleServer) mustEmbedUnimplementedArticleServer() {}
 func (UnimplementedArticleServer) testEmbeddedByValue()                 {}
@@ -206,6 +268,60 @@ func _Article_ArticleDetail_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Article_ApproveArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArticleApproveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServer).ApproveArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Article_ApproveArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServer).ApproveArticle(ctx, req.(*ArticleApproveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Article_RejectArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArticleRejectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServer).RejectArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Article_RejectArticle_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServer).RejectArticle(ctx, req.(*ArticleRejectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Article_GetPendingArticles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServer).GetPendingArticles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Article_GetPendingArticles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServer).GetPendingArticles(ctx, req.(*AdminListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Article_ServiceDesc is the grpc.ServiceDesc for Article service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +344,18 @@ var Article_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ArticleDetail",
 			Handler:    _Article_ArticleDetail_Handler,
+		},
+		{
+			MethodName: "ApproveArticle",
+			Handler:    _Article_ApproveArticle_Handler,
+		},
+		{
+			MethodName: "RejectArticle",
+			Handler:    _Article_RejectArticle_Handler,
+		},
+		{
+			MethodName: "GetPendingArticles",
+			Handler:    _Article_GetPendingArticles_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

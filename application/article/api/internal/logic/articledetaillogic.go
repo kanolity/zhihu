@@ -4,6 +4,7 @@ import (
 	"context"
 	"go_code/zhihu/application/article/api/internal/code"
 	"go_code/zhihu/application/article/rpc/types/article"
+	"go_code/zhihu/application/tag/rpc/types/tag"
 	"go_code/zhihu/application/user/rpc/types/user"
 	"strconv"
 
@@ -46,10 +47,15 @@ func (l *ArticleDetailLogic) ArticleDetail(req *types.ArticleDetailRequest) (res
 		return nil, code.GetUserInfoFailed
 	}
 
+	tags, err := l.svcCtx.TagRpc.GetTags(l.ctx, &tag.GetTagsRequest{TagIds: articleInfo.Article.TagIds})
+	if err != nil {
+		logx.Errorf("get tags req: %v err: %v", req, err)
+	}
 	return &types.ArticleDetailResponse{
 		Title:      articleInfo.Article.Title,
 		Content:    articleInfo.Article.Content,
 		AuthorId:   strconv.FormatInt(articleInfo.Article.AuthorId, 10),
 		AuthorName: userInfo.Username,
+		TagNames:   tags.TagNames,
 	}, nil
 }

@@ -23,22 +23,44 @@ func NewArticleServer(svcCtx *svc.ServiceContext) *ArticleServer {
 	}
 }
 
+// 发布文章
 func (s *ArticleServer) Publish(ctx context.Context, in *article.PublishRequest) (*article.PublishResponse, error) {
 	l := logic.NewPublishLogic(ctx, s.svcCtx)
 	return l.Publish(in)
 }
 
+// 查看某用户的所有文章
 func (s *ArticleServer) Articles(ctx context.Context, in *article.ArticlesRequest) (*article.ArticlesResponse, error) {
 	l := logic.NewArticlesLogic(ctx, s.svcCtx)
 	return l.Articles(in)
 }
 
+// 删除文章
 func (s *ArticleServer) ArticleDelete(ctx context.Context, in *article.ArticleDeleteRequest) (*article.ArticleDeleteResponse, error) {
 	l := logic.NewArticleDeleteLogic(ctx, s.svcCtx)
 	return l.ArticleDelete(in)
 }
 
+// 文章详情
 func (s *ArticleServer) ArticleDetail(ctx context.Context, in *article.ArticleDetailRequest) (*article.ArticleDetailResponse, error) {
 	l := logic.NewArticleDetailLogic(ctx, s.svcCtx)
 	return l.ArticleDetail(in)
+}
+
+// 后台：审核通过
+func (s *ArticleServer) ApproveArticle(ctx context.Context, in *article.ArticleApproveRequest) (*article.ArticleApproveResponse, error) {
+	l := logic.NewApproveArticleLogic(ctx, s.svcCtx)
+	return l.ApproveArticle(in)
+}
+
+// 后台：审核驳回
+func (s *ArticleServer) RejectArticle(ctx context.Context, in *article.ArticleRejectRequest) (*article.ArticleRejectResponse, error) {
+	l := logic.NewRejectArticleLogic(ctx, s.svcCtx)
+	return l.RejectArticle(in)
+}
+
+// 后台：待审核或驳回文章列表
+func (s *ArticleServer) GetPendingArticles(ctx context.Context, in *article.AdminListRequest) (*article.AdminListResponse, error) {
+	l := logic.NewGetPendingArticlesLogic(ctx, s.svcCtx)
+	return l.GetPendingArticles(in)
 }

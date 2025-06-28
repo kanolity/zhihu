@@ -489,6 +489,94 @@ func (x *GetResourceTagsReply) GetTags() []*Tag {
 	return nil
 }
 
+type GetTagsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TagIds        string                 `protobuf:"bytes,1,opt,name=tag_ids,json=tagIds,proto3" json:"tag_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTagsRequest) Reset() {
+	*x = GetTagsRequest{}
+	mi := &file_tag_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTagsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTagsRequest) ProtoMessage() {}
+
+func (x *GetTagsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTagsRequest.ProtoReflect.Descriptor instead.
+func (*GetTagsRequest) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetTagsRequest) GetTagIds() string {
+	if x != nil {
+		return x.TagIds
+	}
+	return ""
+}
+
+type GetTagsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TagNames      []string               `protobuf:"bytes,1,rep,name=tag_names,json=tagNames,proto3" json:"tag_names,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTagsResponse) Reset() {
+	*x = GetTagsResponse{}
+	mi := &file_tag_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTagsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTagsResponse) ProtoMessage() {}
+
+func (x *GetTagsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tag_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTagsResponse.ProtoReflect.Descriptor instead.
+func (*GetTagsResponse) Descriptor() ([]byte, []int) {
+	return file_tag_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetTagsResponse) GetTagNames() []string {
+	if x != nil {
+		return x.TagNames
+	}
+	return nil
+}
+
 var File_tag_proto protoreflect.FileDescriptor
 
 const file_tag_proto_rawDesc = "" +
@@ -521,13 +609,18 @@ const file_tag_proto_rawDesc = "" +
 	"\x06biz_id\x18\x01 \x01(\tR\x05bizId\x12\x1b\n" +
 	"\ttarget_id\x18\x02 \x01(\x03R\btargetId\"4\n" +
 	"\x14GetResourceTagsReply\x12\x1c\n" +
-	"\x04tags\x18\x01 \x03(\v2\b.tag.TagR\x04tags2\x91\x02\n" +
+	"\x04tags\x18\x01 \x03(\v2\b.tag.TagR\x04tags\")\n" +
+	"\x0eGetTagsRequest\x12\x17\n" +
+	"\atag_ids\x18\x01 \x01(\tR\x06tagIds\".\n" +
+	"\x0fGetTagsResponse\x12\x1b\n" +
+	"\ttag_names\x18\x01 \x03(\tR\btagNames2\xc7\x02\n" +
 	"\n" +
 	"TagService\x127\n" +
 	"\tCreateTag\x12\x15.tag.CreateTagRequest\x1a\x13.tag.CreateTagReply\x121\n" +
 	"\aListTag\x12\x13.tag.ListTagRequest\x1a\x11.tag.ListTagReply\x12L\n" +
 	"\x10AddTagToResource\x12\x1c.tag.AddTagToResourceRequest\x1a\x1a.tag.AddTagToResourceReply\x12I\n" +
-	"\x0fGetResourceTags\x12\x1b.tag.GetResourceTagsRequest\x1a\x19.tag.GetResourceTagsReplyB\aZ\x05./tagb\x06proto3"
+	"\x0fGetResourceTags\x12\x1b.tag.GetResourceTagsRequest\x1a\x19.tag.GetResourceTagsReply\x124\n" +
+	"\aGetTags\x12\x13.tag.GetTagsRequest\x1a\x14.tag.GetTagsResponseB\aZ\x05./tagb\x06proto3"
 
 var (
 	file_tag_proto_rawDescOnce sync.Once
@@ -541,7 +634,7 @@ func file_tag_proto_rawDescGZIP() []byte {
 	return file_tag_proto_rawDescData
 }
 
-var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_tag_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_tag_proto_goTypes = []any{
 	(*CreateTagRequest)(nil),        // 0: tag.CreateTagRequest
 	(*CreateTagReply)(nil),          // 1: tag.CreateTagReply
@@ -552,23 +645,27 @@ var file_tag_proto_goTypes = []any{
 	(*AddTagToResourceReply)(nil),   // 6: tag.AddTagToResourceReply
 	(*GetResourceTagsRequest)(nil),  // 7: tag.GetResourceTagsRequest
 	(*GetResourceTagsReply)(nil),    // 8: tag.GetResourceTagsReply
+	(*GetTagsRequest)(nil),          // 9: tag.GetTagsRequest
+	(*GetTagsResponse)(nil),         // 10: tag.GetTagsResponse
 }
 var file_tag_proto_depIdxs = []int32{
-	3, // 0: tag.ListTagReply.tags:type_name -> tag.Tag
-	3, // 1: tag.GetResourceTagsReply.tags:type_name -> tag.Tag
-	0, // 2: tag.TagService.CreateTag:input_type -> tag.CreateTagRequest
-	2, // 3: tag.TagService.ListTag:input_type -> tag.ListTagRequest
-	5, // 4: tag.TagService.AddTagToResource:input_type -> tag.AddTagToResourceRequest
-	7, // 5: tag.TagService.GetResourceTags:input_type -> tag.GetResourceTagsRequest
-	1, // 6: tag.TagService.CreateTag:output_type -> tag.CreateTagReply
-	4, // 7: tag.TagService.ListTag:output_type -> tag.ListTagReply
-	6, // 8: tag.TagService.AddTagToResource:output_type -> tag.AddTagToResourceReply
-	8, // 9: tag.TagService.GetResourceTags:output_type -> tag.GetResourceTagsReply
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	3,  // 0: tag.ListTagReply.tags:type_name -> tag.Tag
+	3,  // 1: tag.GetResourceTagsReply.tags:type_name -> tag.Tag
+	0,  // 2: tag.TagService.CreateTag:input_type -> tag.CreateTagRequest
+	2,  // 3: tag.TagService.ListTag:input_type -> tag.ListTagRequest
+	5,  // 4: tag.TagService.AddTagToResource:input_type -> tag.AddTagToResourceRequest
+	7,  // 5: tag.TagService.GetResourceTags:input_type -> tag.GetResourceTagsRequest
+	9,  // 6: tag.TagService.GetTags:input_type -> tag.GetTagsRequest
+	1,  // 7: tag.TagService.CreateTag:output_type -> tag.CreateTagReply
+	4,  // 8: tag.TagService.ListTag:output_type -> tag.ListTagReply
+	6,  // 9: tag.TagService.AddTagToResource:output_type -> tag.AddTagToResourceReply
+	8,  // 10: tag.TagService.GetResourceTags:output_type -> tag.GetResourceTagsReply
+	10, // 11: tag.TagService.GetTags:output_type -> tag.GetTagsResponse
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_tag_proto_init() }
@@ -582,7 +679,7 @@ func file_tag_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tag_proto_rawDesc), len(file_tag_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

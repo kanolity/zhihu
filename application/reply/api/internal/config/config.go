@@ -14,5 +14,6 @@ type Config struct {
 		RefreshExpire int64
 		RefreshAfter  int64
 	}
-	ReplyRPC zrpc.RpcClientConf
+	ReplyRPC   zrpc.RpcClientConf
+	MessagePRC zrpc.RpcClientConf
 }

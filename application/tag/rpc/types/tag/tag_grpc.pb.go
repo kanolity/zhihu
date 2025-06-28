@@ -23,6 +23,7 @@ const (
 	TagService_ListTag_FullMethodName          = "/tag.TagService/ListTag"
 	TagService_AddTagToResource_FullMethodName = "/tag.TagService/AddTagToResource"
 	TagService_GetResourceTags_FullMethodName  = "/tag.TagService/GetResourceTags"
+	TagService_GetTags_FullMethodName          = "/tag.TagService/GetTags"
 )
 
 // TagServiceClient is the client API for TagService service.
@@ -33,6 +34,7 @@ type TagServiceClient interface {
 	ListTag(ctx context.Context, in *ListTagRequest, opts ...grpc.CallOption) (*ListTagReply, error)
 	AddTagToResource(ctx context.Context, in *AddTagToResourceRequest, opts ...grpc.CallOption) (*AddTagToResourceReply, error)
 	GetResourceTags(ctx context.Context, in *GetResourceTagsRequest, opts ...grpc.CallOption) (*GetResourceTagsReply, error)
+	GetTags(ctx context.Context, in *GetTagsRequest, opts ...grpc.CallOption) (*GetTagsResponse, error)
 }
 
 type tagServiceClient struct {
@@ -83,6 +85,16 @@ func (c *tagServiceClient) GetResourceTags(ctx context.Context, in *GetResourceT
 	return out, nil
 }
 
+func (c *tagServiceClient) GetTags(ctx context.Context, in *GetTagsRequest, opts ...grpc.CallOption) (*GetTagsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTagsResponse)
+	err := c.cc.Invoke(ctx, TagService_GetTags_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TagServiceServer is the server API for TagService service.
 // All implementations must embed UnimplementedTagServiceServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type TagServiceServer interface {
 	ListTag(context.Context, *ListTagRequest) (*ListTagReply, error)
 	AddTagToResource(context.Context, *AddTagToResourceRequest) (*AddTagToResourceReply, error)
 	GetResourceTags(context.Context, *GetResourceTagsRequest) (*GetResourceTagsReply, error)
+	GetTags(context.Context, *GetTagsRequest) (*GetTagsResponse, error)
 	mustEmbedUnimplementedTagServiceServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedTagServiceServer) AddTagToResource(context.Context, *AddTagTo
 }
 func (UnimplementedTagServiceServer) GetResourceTags(context.Context, *GetResourceTagsRequest) (*GetResourceTagsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetResourceTags not implemented")
+}
+func (UnimplementedTagServiceServer) GetTags(context.Context, *GetTagsRequest) (*GetTagsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTags not implemented")
 }
 func (UnimplementedTagServiceServer) mustEmbedUnimplementedTagServiceServer() {}
 func (UnimplementedTagServiceServer) testEmbeddedByValue()                    {}
@@ -206,6 +222,24 @@ func _TagService_GetResourceTags_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TagService_GetTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTagsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TagServiceServer).GetTags(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TagService_GetTags_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TagServiceServer).GetTags(ctx, req.(*GetTagsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TagService_ServiceDesc is the grpc.ServiceDesc for TagService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var TagService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetResourceTags",
 			Handler:    _TagService_GetResourceTags_Handler,
+		},
+		{
+			MethodName: "GetTags",
+			Handler:    _TagService_GetTags_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

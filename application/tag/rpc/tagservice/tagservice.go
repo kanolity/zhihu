@@ -20,6 +20,8 @@ type (
 	CreateTagRequest        = tag.CreateTagRequest
 	GetResourceTagsReply    = tag.GetResourceTagsReply
 	GetResourceTagsRequest  = tag.GetResourceTagsRequest
+	GetTagsRequest          = tag.GetTagsRequest
+	GetTagsResponse         = tag.GetTagsResponse
 	ListTagReply            = tag.ListTagReply
 	ListTagRequest          = tag.ListTagRequest
 	Tag                     = tag.Tag
@@ -29,6 +31,7 @@ type (
 		ListTag(ctx context.Context, in *ListTagRequest, opts ...grpc.CallOption) (*ListTagReply, error)
 		AddTagToResource(ctx context.Context, in *AddTagToResourceRequest, opts ...grpc.CallOption) (*AddTagToResourceReply, error)
 		GetResourceTags(ctx context.Context, in *GetResourceTagsRequest, opts ...grpc.CallOption) (*GetResourceTagsReply, error)
+		GetTags(ctx context.Context, in *GetTagsRequest, opts ...grpc.CallOption) (*GetTagsResponse, error)
 	}
 
 	defaultTagService struct {
@@ -60,4 +63,9 @@ func (m *defaultTagService) AddTagToResource(ctx context.Context, in *AddTagToRe
 func (m *defaultTagService) GetResourceTags(ctx context.Context, in *GetResourceTagsRequest, opts ...grpc.CallOption) (*GetResourceTagsReply, error) {
 	client := tag.NewTagServiceClient(m.cli.Conn())
 	return client.GetResourceTags(ctx, in, opts...)
+}
+
+func (m *defaultTagService) GetTags(ctx context.Context, in *GetTagsRequest, opts ...grpc.CallOption) (*GetTagsResponse, error) {
+	client := tag.NewTagServiceClient(m.cli.Conn())
+	return client.GetTags(ctx, in, opts...)
 }

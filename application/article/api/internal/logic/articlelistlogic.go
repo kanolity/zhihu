@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"go_code/zhihu/application/article/rpc/types/article"
+	"go_code/zhihu/application/tag/rpc/types/tag"
 
 	"go_code/zhihu/application/article/api/internal/svc"
 	"go_code/zhihu/application/article/api/internal/types"
@@ -41,9 +42,16 @@ func (l *ArticleListLogic) ArticleList(req *types.ArticleListRequest) (resp *typ
 	}
 	articleInfos := make([]types.ArticleInfo, 0, len(articles.Articles))
 	for _, a := range articles.Articles {
+		tags, err := l.svcCtx.TagRpc.GetTags(l.ctx, &tag.GetTagsRequest{TagIds: a.TagIds})
+		if err != nil {
+			logx.Errorf("get tags req: %v err: %v", req, err)
+			continue
+		}
 		articleInfos = append(articleInfos, types.ArticleInfo{
 			ArticleId: a.Id,
 			Title:     a.Title,
+			TagNames:  tags.TagNames,
+			LikeNum:   a.LikeCount,
 		})
 	}
 
