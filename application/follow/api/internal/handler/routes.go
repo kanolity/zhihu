@@ -16,24 +16,26 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/fans/list",
+				Path:    "/fanslist",
 				Handler: fansListHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/follow",
+				Path:    "/follow",
 				Handler: followHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/api/follow/list",
+				Path:    "/list",
 				Handler: followListHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/unfollow",
+				Path:    "/unfollow",
 				Handler: unfollowHandler(serverCtx),
 			},
 		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/follow"),
 	)
 }

@@ -1,0 +1,67 @@
+# api
+article-api:
+  Name: article-api
+  Host: 0.0.0.0
+  Port: 8888
+chat-api:
+  Name: chat-api
+  Host: 0.0.0.0
+  Port: 8889
+follow-api:
+  Name: follow-api
+  Host: 0.0.0.0
+  Port: 8890
+like-api:
+  Name: like-api
+  Host: 0.0.0.0
+  Port: 8891
+message-api:
+  Name: message-api
+  Host: 0.0.0.0
+  Port: 8892
+qa-api:
+  Name: qa-api
+  Host: 0.0.0.0
+  Port: 8893
+reply-api:
+  Name: reply-api
+  Host: 0.0.0.0
+  Port: 8894
+tag-api:
+  Name: tag-api
+  Host: 0.0.0.0
+  Port: 8895
+user-api:
+  Name: user-api
+  Host: 0.0.0.0
+  Port: 8896
+
+
+# rpc
+article-rpc:
+  Name: article.rpc
+  ListenOn: 0.0.0.0:8080
+chat-rpc:
+  Name: chat.rpc
+  ListenOn: 0.0.0.0:8081
+follow-rpc:
+  Name: follow.rpc
+  ListenOn: 0.0.0.0:8082
+like-rpc:
+  Name: like.rpc
+  ListenOn: 0.0.0.0:8083
+message-rpc:
+  Name: message.rpc
+  ListenOn: 0.0.0.0:8084
+qa-rpc:
+  Name: qa.rpc
+  ListenOn: 0.0.0.0:8085
+reply-rpc:
+  Name: reply.rpc
+  ListenOn: 0.0.0.0:8086
+tag-rpc:
+  Name: tag.rpc
+  ListenOn: 0.0.0.0:8087
+user-rpc:
+  Name: user.rpc
+  ListenOn: 0.0.0.0:8088

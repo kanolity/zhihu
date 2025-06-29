@@ -51,6 +51,7 @@ type (
 
 @server (
 	prefix: /api/qa
+	jwt:    Auth
 )
 service qa-api {
 	@handler createQuestion
@@ -65,3 +66,4 @@ service qa-api {
 	@handler getAnswers
 	get /answer/list (GetAnswersReq) returns (GetAnswersResp)
 }
+

@@ -57,6 +57,12 @@ func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (res
 
 	// 过滤条件
 	filterArr := make([]interface{}, 0)
+	filterArr = append(filterArr, map[string]interface{}{
+		"term": map[string]interface{}{
+			"status": 2,
+		},
+	})
+
 	// 作者过滤
 	if req.AuthorId > 0 {
 		filterArr = append(filterArr, map[string]interface{}{

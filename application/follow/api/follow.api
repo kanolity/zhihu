@@ -42,17 +42,21 @@ type (
 	}
 )
 
+@server (
+	prefix: /api/follow
+	jwt:    Auth
+)
 service follow-api {
 	@handler follow
-	post /api/follow (FollowReq) returns (FollowResp)
+	post /follow (FollowReq) returns (FollowResp)
 
 	@handler unfollow
-	post /api/unfollow (UnFollowReq) returns (UnFollowResp)
+	post /unfollow (UnFollowReq) returns (UnFollowResp)
 
 	@handler followList
-	get /api/follow/list (FollowListReq) returns (FollowListResp)
+	get /list (FollowListReq) returns (FollowListResp)
 
 	@handler fansList
-	get /api/fans/list (FansListReq) returns (FansListResp)
+	get /fanslist (FansListReq) returns (FansListResp)
 }
 

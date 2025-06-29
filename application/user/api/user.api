@@ -53,7 +53,7 @@ type (
 )
 
 @server (
-	prefix: /api
+	prefix: /api/user
 )
 service user-api {
 	@handler Register
@@ -82,7 +82,7 @@ service user-api {
 	put /change_password (ChangePasswordRequest) returns (ChangePasswordResponse)
 
 	@handler GetOtherInfo
-	get /info/other (GetOtherInfoRequest) returns (GetOtherInfoResponse)
+	get /otherinfo (GetOtherInfoRequest) returns (GetOtherInfoResponse)
 }
 
 //游客账号

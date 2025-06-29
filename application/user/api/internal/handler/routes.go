@@ -30,7 +30,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: VerificationHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/api/user"),
 	)
 
 	server.AddRoutes(
@@ -52,7 +52,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/info/other",
+				Path:    "/otherinfo",
 				Handler: GetOtherInfoHandler(serverCtx),
 			},
 		},

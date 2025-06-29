@@ -1,6 +1,6 @@
 Name: follow-api
 Host: 0.0.0.0
-Port: 8888
+Port: 8890
 FollowRPC:
   Etcd:
     Hosts:
