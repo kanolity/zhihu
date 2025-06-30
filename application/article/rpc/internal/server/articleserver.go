@@ -47,6 +47,11 @@ func (s *ArticleServer) ArticleDetail(ctx context.Context, in *article.ArticleDe
 	return l.ArticleDetail(in)
 }
 
+func (s *ArticleServer) ArticleReplyIncrease(ctx context.Context, in *article.ArticleReplyIncreaseRequest) (*article.ArticleReplyIncreaseResponse, error) {
+	l := logic.NewArticleReplyIncreaseLogic(ctx, s.svcCtx)
+	return l.ArticleReplyIncrease(in)
+}
+
 // 后台：审核通过
 func (s *ArticleServer) ApproveArticle(ctx context.Context, in *article.ArticleApproveRequest) (*article.ArticleApproveResponse, error) {
 	l := logic.NewApproveArticleLogic(ctx, s.svcCtx)

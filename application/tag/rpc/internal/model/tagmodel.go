@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	sqlx2 "github.com/jmoiron/sqlx"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
@@ -37,9 +38,11 @@ func (m *customTagModel) withSession(session sqlx.Session) TagModel {
 }
 
 func (m *defaultTagModel) ListTags(ctx context.Context, cursor, limit int64) ([]*Tag, error) {
-	query := fmt.Sprintf(`SELECT %s FROM %s WHERE id < ? ORDER BY id DESC LIMIT ?`, tagRows, m.table)
+	query := fmt.Sprintf(`SELECT %s FROM %s WHERE id > ? ORDER BY id DESC LIMIT ?`, tagRows, m.table)
 	var tags []*Tag
 	err := m.conn.QueryRowsCtx(ctx, &tags, query, cursor, limit)
+	logx.Infof("ListTags: cursor=%d, limit=%d, got=%d tags", cursor, limit, len(tags))
+
 	return tags, err
 }
 

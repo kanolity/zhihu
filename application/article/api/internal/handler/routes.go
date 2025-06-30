@@ -17,7 +17,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPut,
-				Path:    "/article/deleted",
+				Path:    "/deleted",
 				Handler: ArticleDeletedHandler(serverCtx),
 			},
 			{

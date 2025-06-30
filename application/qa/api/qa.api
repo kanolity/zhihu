@@ -47,6 +47,24 @@ type (
 		Answers []Answer `json:"answers"`
 		HasMore bool     `json:"has_more"`
 	}
+	GetQuestionsReq {
+		Cursor     int64 `form:"cursor"`
+		Limit      int64 `form:"limit"`
+		QuestionId int64 `form:"question_id"`
+	}
+	GetQuestionsResp {
+		GetQuestions []GetQuestion `json:"questions"`
+		HasMore   bool          `json:"has_more"`
+	}
+	GetQuestion {
+		Id          int64  `json:"id"`
+		Username    string `json:"username"`
+		Avatar      string `json:"avatar"`
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		IsResolved  bool   `json:"is_resolved"`
+		CreateTime  string `json:"create_time"`
+	}
 )
 
 @server (
@@ -65,5 +83,8 @@ service qa-api {
 
 	@handler getAnswers
 	get /answer/list (GetAnswersReq) returns (GetAnswersResp)
+
+	@handler getQuestions
+	get /question/list (GetQuestionsReq) returns (GetQuestionsResp)
 }
 

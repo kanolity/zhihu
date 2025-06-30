@@ -14,22 +14,24 @@ import (
 )
 
 type (
-	AdminListRequest       = article.AdminListRequest
-	AdminListResponse      = article.AdminListResponse
-	ArticleApproveRequest  = article.ArticleApproveRequest
-	ArticleApproveResponse = article.ArticleApproveResponse
-	ArticleDeleteRequest   = article.ArticleDeleteRequest
-	ArticleDeleteResponse  = article.ArticleDeleteResponse
-	ArticleDetailRequest   = article.ArticleDetailRequest
-	ArticleDetailResponse  = article.ArticleDetailResponse
-	ArticleItem            = article.ArticleItem
-	ArticleRejectRequest   = article.ArticleRejectRequest
-	ArticleRejectResponse  = article.ArticleRejectResponse
-	ArticlesRequest        = article.ArticlesRequest
-	ArticlesResponse       = article.ArticlesResponse
-	PendingArticleItem     = article.PendingArticleItem
-	PublishRequest         = article.PublishRequest
-	PublishResponse        = article.PublishResponse
+	AdminListRequest             = article.AdminListRequest
+	AdminListResponse            = article.AdminListResponse
+	ArticleApproveRequest        = article.ArticleApproveRequest
+	ArticleApproveResponse       = article.ArticleApproveResponse
+	ArticleDeleteRequest         = article.ArticleDeleteRequest
+	ArticleDeleteResponse        = article.ArticleDeleteResponse
+	ArticleDetailRequest         = article.ArticleDetailRequest
+	ArticleDetailResponse        = article.ArticleDetailResponse
+	ArticleItem                  = article.ArticleItem
+	ArticleRejectRequest         = article.ArticleRejectRequest
+	ArticleRejectResponse        = article.ArticleRejectResponse
+	ArticleReplyIncreaseRequest  = article.ArticleReplyIncreaseRequest
+	ArticleReplyIncreaseResponse = article.ArticleReplyIncreaseResponse
+	ArticlesRequest              = article.ArticlesRequest
+	ArticlesResponse             = article.ArticlesResponse
+	PendingArticleItem           = article.PendingArticleItem
+	PublishRequest               = article.PublishRequest
+	PublishResponse              = article.PublishResponse
 
 	Article interface {
 		// 发布文章
@@ -40,6 +42,7 @@ type (
 		ArticleDelete(ctx context.Context, in *ArticleDeleteRequest, opts ...grpc.CallOption) (*ArticleDeleteResponse, error)
 		// 文章详情
 		ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error)
+		ArticleReplyIncrease(ctx context.Context, in *ArticleReplyIncreaseRequest, opts ...grpc.CallOption) (*ArticleReplyIncreaseResponse, error)
 		// 后台：审核通过
 		ApproveArticle(ctx context.Context, in *ArticleApproveRequest, opts ...grpc.CallOption) (*ArticleApproveResponse, error)
 		// 后台：审核驳回
@@ -81,6 +84,11 @@ func (m *defaultArticle) ArticleDelete(ctx context.Context, in *ArticleDeleteReq
 func (m *defaultArticle) ArticleDetail(ctx context.Context, in *ArticleDetailRequest, opts ...grpc.CallOption) (*ArticleDetailResponse, error) {
 	client := article.NewArticleClient(m.cli.Conn())
 	return client.ArticleDetail(ctx, in, opts...)
+}
+
+func (m *defaultArticle) ArticleReplyIncrease(ctx context.Context, in *ArticleReplyIncreaseRequest, opts ...grpc.CallOption) (*ArticleReplyIncreaseResponse, error) {
+	client := article.NewArticleClient(m.cli.Conn())
+	return client.ArticleReplyIncrease(ctx, in, opts...)
 }
 
 // 后台：审核通过

@@ -42,6 +42,7 @@ func (l *ArticleDetailLogic) ArticleDetail(in *article.ArticleDetailRequest) (*a
 			AuthorId:    int64(article1.AuthorId),
 			LikeCount:   article1.LikeNum,
 			PublishTime: article1.PublishTime.Unix(),
+			TagIds:      article1.TagIds,
 		},
 	}, nil
 }

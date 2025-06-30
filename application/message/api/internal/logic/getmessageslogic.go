@@ -31,7 +31,14 @@ func (l *GetMessagesLogic) GetMessages(req *types.GetMessagesReq) (resp *types.G
 		Limit:      req.Limit,
 	})
 	if err != nil {
+		logx.Errorf("rpc get messages err:%v", err)
 		return nil, err
+	}
+	if len(response.Messages) == 0 {
+		return &types.GetMessagesResp{
+			Messages: []types.Message{},
+			HasMore:  response.HasMore,
+		}, nil
 	}
 
 	msgs := make([]types.Message, 0, len(response.Messages))

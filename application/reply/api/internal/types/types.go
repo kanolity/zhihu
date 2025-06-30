@@ -15,6 +15,14 @@ type GetRepliesResp struct {
 	HasMore bool    `json:"has_more"`
 }
 
+type GetReplytNumReq struct {
+	ArticleId int64 `json:"article_id"`
+}
+
+type GetReplytNumResp struct {
+	CommentNum int64 `json:"comment_num"`
+}
+
 type PostReplyReq struct {
 	BizId         string `json:"biz_id"`
 	TargetId      int64  `json:"target_id"`

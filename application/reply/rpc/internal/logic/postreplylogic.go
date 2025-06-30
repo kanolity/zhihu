@@ -51,7 +51,7 @@ func (l *PostReplyLogic) PostReply(in *reply.PostReplyRequest) (*reply.PostReply
 		return nil, err
 	}
 
-	// 可选：更新 reply_count 表
+	// 更新 reply_count 表
 	_ = l.svcCtx.ReplyCountModel.IncreaseCount(l.ctx, in.BizId, in.TargetId, in.ParentId == 0)
 
 	return &reply.PostReplyReply{Id: id}, nil

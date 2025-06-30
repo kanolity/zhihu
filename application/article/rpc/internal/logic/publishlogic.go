@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"go_code/zhihu/application/article/rpc/internal/code"
 	"go_code/zhihu/application/article/rpc/internal/model"
 	"go_code/zhihu/application/article/rpc/types"
@@ -29,6 +30,7 @@ func NewPublishLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PublishLo
 }
 
 func (l *PublishLogic) Publish(in *article.PublishRequest) (*article.PublishResponse, error) {
+	fmt.Println("PublishLogic Publish")
 	if in.UserId <= 0 {
 		return nil, code.UserIdInvalid
 	}

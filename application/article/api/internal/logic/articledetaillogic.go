@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"go_code/zhihu/application/article/api/internal/code"
 	"go_code/zhihu/application/article/rpc/types/article"
 	"go_code/zhihu/application/tag/rpc/types/tag"
@@ -47,6 +48,7 @@ func (l *ArticleDetailLogic) ArticleDetail(req *types.ArticleDetailRequest) (res
 		return nil, code.GetUserInfoFailed
 	}
 
+	fmt.Printf("tagids:%+v\n", articleInfo.Article)
 	tags, err := l.svcCtx.TagRpc.GetTags(l.ctx, &tag.GetTagsRequest{TagIds: articleInfo.Article.TagIds})
 	if err != nil {
 		logx.Errorf("get tags req: %v err: %v", req, err)

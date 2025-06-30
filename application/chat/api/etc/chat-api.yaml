@@ -12,7 +12,7 @@ Auth:
   RefreshSecret: qazwsxedc
   RefreshExpire: 2592000
   RefreshAfter: 604800
-UserPRC:
+UserRPC:
   Etcd:
     Hosts:
       - 127.0.0.1:2379

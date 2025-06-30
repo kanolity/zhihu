@@ -28,17 +28,16 @@ func NewArticleLikeNumLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ar
 
 func (l *ArticleLikeNumLogic) Consume(ctx context.Context, key string, val string) error {
 	fmt.Println("原始数据：", val)
+
 	var msg *types.CanalLikeMsg
-	err := json.Unmarshal([]byte(val), &msg)
-	if err != nil {
+	if err := json.Unmarshal([]byte(val), &msg); err != nil {
 		logx.Errorf("Consume val: %s error: %v", val, err)
 		return err
 	}
-
-	return l.updateArticleLikeNum(l.ctx, msg)
+	return l.handleLikeUpdate(ctx, msg)
 }
 
-func (l *ArticleLikeNumLogic) updateArticleLikeNum(ctx context.Context, msg *types.CanalLikeMsg) error {
+func (l *ArticleLikeNumLogic) handleLikeUpdate(ctx context.Context, msg *types.CanalLikeMsg) error {
 	if len(msg.Data) == 0 {
 		return nil
 	}
@@ -47,25 +46,45 @@ func (l *ArticleLikeNumLogic) updateArticleLikeNum(ctx context.Context, msg *typ
 		if d.BizID != types.ArticleBizID {
 			continue
 		}
-		id, err := strconv.ParseInt(d.TargetId, 10, 64)
+
+		articleID, err := strconv.ParseInt(d.TargetId, 10, 64)
 		if err != nil {
-			logx.Errorf("strconv.ParseInt id: %s error: %v", d.ID, err)
-			continue
-		}
-		likeNum, err := strconv.ParseInt(d.LikeNum, 10, 64)
-		if err != nil {
-			logx.Errorf("strconv.ParseInt likeNum: %s error: %v", d.LikeNum, err)
+			logx.Errorf("解析文章 ID 错误: %s, err: %v", d.TargetId, err)
 			continue
 		}
 
-		err = l.svcCtx.ArticleModel.UpdateLikeNum(ctx, id, likeNum)
+		likeNum, err := strconv.ParseInt(d.LikeNum, 10, 64)
 		if err != nil {
-			logx.Errorf("UpdateLikeNum error, id=%d like=%d: %v", id, likeNum, err)
+			logx.Errorf("解析点赞数错误: %s, err: %v", d.LikeNum, err)
+			continue
+		}
+
+		if changed, err := l.shouldUpdateLikeNum(ctx, articleID, likeNum); err != nil {
+			logx.Errorf("检查是否需要更新失败, id=%d: %v", articleID, err)
+			continue
+		} else if !changed {
+			continue
+		}
+
+		// 真正执行更新
+		err = l.svcCtx.ArticleModel.UpdateLikeNum(ctx, articleID, likeNum)
+		if err != nil {
+			logx.Errorf("更新点赞数失败 id=%d like=%d: %v", articleID, likeNum, err)
 			continue
 		}
 	}
-
 	return nil
+}
+
+func (l *ArticleLikeNumLogic) shouldUpdateLikeNum(ctx context.Context, id int64, newLikeNum int64) (bool, error) {
+	article, err := l.svcCtx.ArticleModel.FindOne(ctx, id)
+	if err != nil {
+		return false, err
+	}
+	if article.LikeNum == newLikeNum {
+		return false, nil // 没变化就跳过
+	}
+	return true, nil
 }
 
 func Consumers(ctx context.Context, svcCtx *svc.ServiceContext) []service.Service {

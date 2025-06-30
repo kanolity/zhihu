@@ -29,7 +29,7 @@ func NewArticleSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Art
 
 func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (resp *types.ArticleSearchResponse, err error) {
 	resp = &types.ArticleSearchResponse{
-		Articles: make([]types.ArticleInfo, 0),
+		Articles: make([]types.ESArticleInfo, 0),
 	}
 
 	// 设置默认分页大小
@@ -48,20 +48,27 @@ func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (res
 		boolQuery["must"] = []interface{}{
 			map[string]interface{}{
 				"multi_match": map[string]interface{}{
-					"query":  req.Query,
-					"fields": []string{"title", "content", "description"},
+					"query":     req.Query,
+					"fields":    []string{"title", "content", "description"},
+					"fuzziness": 2,
 				},
+			},
+		}
+	} else {
+		boolQuery["must"] = []interface{}{
+			map[string]interface{}{
+				"match_all": map[string]interface{}{},
 			},
 		}
 	}
 
 	// 过滤条件
 	filterArr := make([]interface{}, 0)
-	filterArr = append(filterArr, map[string]interface{}{
-		"term": map[string]interface{}{
-			"status": 2,
-		},
-	})
+	//filterArr = append(filterArr, map[string]interface{}{
+	//	"term": map[string]interface{}{
+	//		"status": 2,
+	//	},
+	//})
 
 	// 作者过滤
 	if req.AuthorId > 0 {
@@ -82,13 +89,6 @@ func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (res
 
 	if len(filterArr) > 0 {
 		boolQuery["filter"] = filterArr
-	}
-
-	// 如果没有must，boolQuery 仍需保证存在，避免空查询错误
-	if _, ok := boolQuery["must"]; !ok && len(filterArr) == 0 {
-		boolQuery["must"] = map[string]interface{}{
-			"match_all": map[string]interface{}{},
-		}
 	}
 
 	query["query"] = map[string]interface{}{
@@ -116,6 +116,7 @@ func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (res
 	// 编码成 JSON 请求体
 	var buf strings.Builder
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
+		logx.Errorf("json encode err:%v", err)
 		return nil, err
 	}
 
@@ -125,13 +126,18 @@ func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (res
 		l.svcCtx.Es.Client.Search.WithIndex("article-index"),
 		l.svcCtx.Es.Client.Search.WithBody(strings.NewReader(buf.String())),
 	)
+
 	if err != nil {
+		logx.Errorf("es client err:%v", err)
 		return nil, err
 	}
 	defer res.Body.Close()
 
+	body, _ := io.ReadAll(res.Body)
+	logx.Infof("ES Raw Response: %s", string(body))
+
 	if res.IsError() {
-		body, _ := io.ReadAll(res.Body)
+		logx.Errorf("elasticsearch search err: %s", string(body))
 		return nil, fmt.Errorf("elasticsearch search error: %s", string(body))
 	}
 
@@ -142,13 +148,14 @@ func (l *ArticleSearchLogic) ArticleSearch(req *types.ArticleSearchRequest) (res
 				Value int64 `json:"value"`
 			} `json:"total"`
 			Hits []struct {
-				Source types.ArticleInfo `json:"_source"`
-				Sort   []interface{}     `json:"sort"`
+				Source types.ESArticleInfo `json:"_source"`
+				Sort   []interface{}       `json:"sort"`
 			} `json:"hits"`
 		} `json:"hits"`
 	}
 
-	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+	if err := json.Unmarshal(body, &r); err != nil {
+		logx.Errorf("decode response body err: %v", err)
 		return nil, err
 	}
 

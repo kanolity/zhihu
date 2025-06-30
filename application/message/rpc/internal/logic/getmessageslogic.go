@@ -26,7 +26,14 @@ func NewGetMessagesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMe
 func (l *GetMessagesLogic) GetMessages(in *message.GetMessagesRequest) (*message.GetMessagesReply, error) {
 	msgs, err := l.svcCtx.MessageModel.ListByReceiver(l.ctx, in.ReceiverId, in.Cursor, in.Limit+1)
 	if err != nil {
+		logx.Errorf("ListByReceiver error:%v", err)
 		return nil, err
+	}
+	if len(msgs) == 0 {
+		return &message.GetMessagesReply{
+			Messages: []*message.Message{},
+			HasMore:  false,
+		}, nil
 	}
 
 	resp := &message.GetMessagesReply{

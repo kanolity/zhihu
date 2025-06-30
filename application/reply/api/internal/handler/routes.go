@@ -24,6 +24,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/post_reply",
 				Handler: postReplyHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/replynums",
+				Handler: getReplyNumHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/reply"),

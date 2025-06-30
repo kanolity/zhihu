@@ -13,6 +13,7 @@ service Article {
   rpc ArticleDelete(ArticleDeleteRequest) returns (ArticleDeleteResponse);
   //文章详情
   rpc ArticleDetail(ArticleDetailRequest) returns (ArticleDetailResponse);
+  rpc ArticleReplyIncrease(ArticleReplyIncreaseRequest)returns(ArticleReplyIncreaseResponse);
 
   // 后台：审核通过
   rpc ApproveArticle (ArticleApproveRequest) returns (ArticleApproveResponse);
@@ -51,6 +52,7 @@ message ArticleItem {
   int64 publishTime = 6;
   int64 authorId = 7;
   string tag_ids = 8;
+  int64 comment_num=9;
 }
 
 message ArticlesResponse {
@@ -110,4 +112,10 @@ message PendingArticleItem {
   string tag_ids = 5;
   int64 status = 6;
   int64 publishTime = 7;
+}
+
+message ArticleReplyIncreaseRequest{
+  int64 article_id=1;
+}
+message ArticleReplyIncreaseResponse{
 }

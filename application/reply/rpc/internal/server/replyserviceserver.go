@@ -32,3 +32,8 @@ func (s *ReplyServiceServer) GetReplies(ctx context.Context, in *reply.GetReplie
 	l := logic.NewGetRepliesLogic(ctx, s.svcCtx)
 	return l.GetReplies(in)
 }
+
+func (s *ReplyServiceServer) GetReplyNum(ctx context.Context, in *reply.GetReplyNumReq) (*reply.GetReplyNumResp, error) {
+	l := logic.NewGetReplyNumLogic(ctx, s.svcCtx)
+	return l.GetReplyNum(in)
+}

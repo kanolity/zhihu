@@ -42,12 +42,33 @@ type GetAnswersResp struct {
 	HasMore bool     `json:"has_more"`
 }
 
+type GetQuestion struct {
+	Id          int64  `json:"id"`
+	Username    string `json:"username"`
+	Avatar      string `json:"avatar"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	IsResolved  bool   `json:"is_resolved"`
+	CreateTime  string `json:"create_time"`
+}
+
 type GetQuestionReq struct {
 	Id int64 `form:"id"`
 }
 
 type GetQuestionResp struct {
 	Question Question `json:"question"`
+}
+
+type GetQuestionsReq struct {
+	Cursor     int64 `form:"cursor"`
+	Limit      int64 `form:"limit"`
+	QuestionId int64 `form:"question_id"`
+}
+
+type GetQuestionsResp struct {
+	Qusetions []GetQuestion `json:"answers"`
+	HasMore   bool          `json:"has_more"`
 }
 
 type Question struct {

@@ -16,6 +16,7 @@ type (
 	ArticleModel interface {
 		articleModel
 		FindPendingArticlesByStatusWithCursor(ctx context.Context, status int, cursorTime string, lastId int64, limit int64) ([]*Article, error)
+		IncreaseReplyNum(ctx context.Context, articleId int64) error
 	}
 
 	customArticleModel struct {
@@ -81,4 +82,13 @@ func (m *customArticleModel) FindPendingArticlesByStatusWithCursor(
 		return nil, err
 	}
 	return articles, nil
+}
+
+func (m *defaultArticleModel) IncreaseReplyNum(ctx context.Context, articleId int64) error {
+	beyondArticleArticleIdKey := fmt.Sprintf("%s%v", cacheBeyondArticleArticleIdPrefix, articleId)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set comment_num = comment_num + 1 where `id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, articleId)
+	}, beyondArticleArticleIdKey)
+	return err
 }

@@ -58,10 +58,20 @@ message GetAnswersReply {
   repeated Answer answers = 1;
   bool has_more = 2;
 }
+message GetQuestionsRequest{
+  int64 cursor = 1;
+  int64 limit = 2;
+  int64 question_id=3;
+}
+message GetQuestionsResponse{
+  repeated Question questions = 1;
+  bool has_more = 2;
+}
 
 service QaService {
   rpc CreateQuestion(CreateQuestionRequest) returns (CreateQuestionReply);
   rpc GetQuestion(GetQuestionRequest) returns (GetQuestionReply);
   rpc AnswerQuestion(AnswerRequest) returns (AnswerReply);
   rpc GetAnswers(GetAnswersRequest) returns (GetAnswersReply);
+  rpc GetQuestions(GetQuestionsRequest)returns(GetQuestionsResponse);
 }

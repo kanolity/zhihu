@@ -21,7 +21,12 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	server := rest.MustNewServer(c.RestConf, rest.WithFileServer("/static", http.Dir("../../../static")))
+	server := rest.MustNewServer(c.RestConf, rest.WithFileServer("/static", http.Dir("../../../static")),
+		rest.WithCorsHeaders(
+			"Access-Control-Allow-Origin",
+			"Access-Control-Allow-Credentials",
+			"Access-Control-Allow-Methods",
+			"Access-Control-Allow-Headers"))
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)

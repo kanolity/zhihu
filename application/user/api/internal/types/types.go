@@ -7,6 +7,7 @@ type Token struct {
 	AccessToken  string `json:"access_token"`
 	AccessExpire int64  `json:"access_expire"`
 }
+
 type ChangeAvatarRequest struct {
 	Avatar string `json:"avatar"`
 }
@@ -58,6 +59,7 @@ type UserInfoResponse struct {
 	UserId   int64  `json:"user_id"`
 	Username string `json:"username"`
 	Avatar   string `json:"avatar"`
+	Mobile   string `json:"mobile"`
 }
 
 type VerificationRequest struct {

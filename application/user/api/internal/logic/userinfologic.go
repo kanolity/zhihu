@@ -45,5 +45,6 @@ func (l *UserInfoLogic) UserInfo() (resp *types.UserInfoResponse, err error) {
 		UserId:   u.UserId,
 		Username: u.Username,
 		Avatar:   u.Avatar,
+		Mobile:   u.Mobile,
 	}, nil
 }

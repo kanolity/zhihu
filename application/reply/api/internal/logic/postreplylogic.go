@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"go_code/zhihu/application/article/rpc/types/article"
 	"go_code/zhihu/application/message/rpc/types/message"
 	"go_code/zhihu/application/reply/rpc/types/reply"
 
@@ -38,11 +39,19 @@ func (l *PostReplyLogic) PostReply(req *types.PostReplyReq) (resp *types.PostRep
 		logx.Errorf("Post Reply  error: %v", err)
 		return nil, err
 	}
+	if req.BizId == "article" {
+		_, err = l.svcCtx.ArticleRpc.ArticleReplyIncrease(l.ctx, &article.ArticleReplyIncreaseRequest{
+			ArticleId: req.TargetId,
+		})
+		if err != nil {
+			logx.Errorf("increase article[%v] comment count  error: %v", req.TargetId, err)
+		}
+	}
 	_, err = l.svcCtx.MessageRpc.SendMessage(l.ctx, &message.SendMessageRequest{
 		Type:       2,
 		BizId:      "reply",
 		TargetId:   req.TargetId,
-		ReceiverId: req.ReplyUserId,
+		ReceiverId: req.BeReplyUserId,
 		Title:      "收到回复",
 		Content:    req.Content,
 	})

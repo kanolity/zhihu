@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"go_code/zhihu/application/user/rpc/internal/code"
+	"go_code/zhihu/pkg/encrypt"
 
 	"go_code/zhihu/application/user/rpc/internal/svc"
 	"go_code/zhihu/application/user/rpc/types/user"
@@ -34,9 +35,11 @@ func (l *FindByIdLogic) FindById(in *user.FindByIdRequest) (*user.FindByIdRespon
 		return &user.FindByIdResponse{}, nil
 	}
 
+	user1.Mobile, err = encrypt.DecMobile(user1.Mobile)
 	return &user.FindByIdResponse{
 		Username: user1.Username,
 		UserId:   user1.Id,
 		Avatar:   user1.Avatar,
+		Mobile:   user1.Mobile,
 	}, nil
 }

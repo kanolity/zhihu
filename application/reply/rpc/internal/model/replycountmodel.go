@@ -15,6 +15,7 @@ type (
 		replyCountModel
 		withSession(session sqlx.Session) ReplyCountModel
 		IncreaseCount(ctx context.Context, bizId string, targetId int64, isRoot bool) error
+		FindByArticleId(ctx context.Context, articleId int64) (int64, error)
 	}
 
 	customReplyCountModel struct {
@@ -58,4 +59,18 @@ func (m *defaultReplyCountModel) IncreaseCount(ctx context.Context, bizId string
 
 	_, err := m.conn.ExecCtx(ctx, query, args...)
 	return err
+}
+
+func (m *defaultReplyCountModel) FindByArticleId(ctx context.Context, articleId int64) (int64, error) {
+	query := fmt.Sprintf("select %s from %s where `target_id` = ? and `biz_id`=? limit 1", replyCountRows, m.table)
+	var resp ReplyCount
+	err := m.conn.QueryRowCtx(ctx, &resp, query, articleId, "article")
+	switch err {
+	case nil:
+		return resp.ReplyNum, nil
+	case sqlx.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
 }

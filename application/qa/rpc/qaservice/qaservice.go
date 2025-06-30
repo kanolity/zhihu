@@ -23,6 +23,8 @@ type (
 	GetAnswersRequest     = qa.GetAnswersRequest
 	GetQuestionReply      = qa.GetQuestionReply
 	GetQuestionRequest    = qa.GetQuestionRequest
+	GetQuestionsRequest   = qa.GetQuestionsRequest
+	GetQuestionsResponse  = qa.GetQuestionsResponse
 	Question              = qa.Question
 
 	QaService interface {
@@ -30,6 +32,7 @@ type (
 		GetQuestion(ctx context.Context, in *GetQuestionRequest, opts ...grpc.CallOption) (*GetQuestionReply, error)
 		AnswerQuestion(ctx context.Context, in *AnswerRequest, opts ...grpc.CallOption) (*AnswerReply, error)
 		GetAnswers(ctx context.Context, in *GetAnswersRequest, opts ...grpc.CallOption) (*GetAnswersReply, error)
+		GetQuestions(ctx context.Context, in *GetQuestionsRequest, opts ...grpc.CallOption) (*GetQuestionsResponse, error)
 	}
 
 	defaultQaService struct {
@@ -61,4 +64,9 @@ func (m *defaultQaService) AnswerQuestion(ctx context.Context, in *AnswerRequest
 func (m *defaultQaService) GetAnswers(ctx context.Context, in *GetAnswersRequest, opts ...grpc.CallOption) (*GetAnswersReply, error) {
 	client := qa.NewQaServiceClient(m.cli.Conn())
 	return client.GetAnswers(ctx, in, opts...)
+}
+
+func (m *defaultQaService) GetQuestions(ctx context.Context, in *GetQuestionsRequest, opts ...grpc.CallOption) (*GetQuestionsResponse, error) {
+	client := qa.NewQaServiceClient(m.cli.Conn())
+	return client.GetQuestions(ctx, in, opts...)
 }

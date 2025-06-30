@@ -15,5 +15,6 @@ type Config struct {
 		RefreshAfter  int64
 	}
 	ReplyRPC   zrpc.RpcClientConf
-	MessagePRC zrpc.RpcClientConf
+	MessageRPC zrpc.RpcClientConf
+	ArticleRPC zrpc.RpcClientConf
 }

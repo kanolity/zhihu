@@ -14,7 +14,7 @@ type (
 		BizId    string `json:"biz_id"`
 		ObjId    int64  `json:"obj_id"`
 		UserId   int64  `json:"user_id"`
-		LikeType int32  `json:"like_type"` //  1=点赞, 2=点踩, 3=撤销点赞, 4=撤销点踩
+		LikeType int32  `json:"like_type"` //  0=点赞, 1=点踩, 2=撤销点赞, 3=撤销点踩
 	}
 	ThumbupResp {
 		BizId      string `json:"biz_id"`

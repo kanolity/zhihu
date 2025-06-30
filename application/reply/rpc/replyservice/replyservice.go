@@ -16,6 +16,8 @@ import (
 type (
 	GetRepliesReply   = reply.GetRepliesReply
 	GetRepliesRequest = reply.GetRepliesRequest
+	GetReplyNumReq    = reply.GetReplyNumReq
+	GetReplyNumResp   = reply.GetReplyNumResp
 	PostReplyReply    = reply.PostReplyReply
 	PostReplyRequest  = reply.PostReplyRequest
 	Reply             = reply.Reply
@@ -23,6 +25,7 @@ type (
 	ReplyService interface {
 		PostReply(ctx context.Context, in *PostReplyRequest, opts ...grpc.CallOption) (*PostReplyReply, error)
 		GetReplies(ctx context.Context, in *GetRepliesRequest, opts ...grpc.CallOption) (*GetRepliesReply, error)
+		GetReplyNum(ctx context.Context, in *GetReplyNumReq, opts ...grpc.CallOption) (*GetReplyNumResp, error)
 	}
 
 	defaultReplyService struct {
@@ -44,4 +47,9 @@ func (m *defaultReplyService) PostReply(ctx context.Context, in *PostReplyReques
 func (m *defaultReplyService) GetReplies(ctx context.Context, in *GetRepliesRequest, opts ...grpc.CallOption) (*GetRepliesReply, error) {
 	client := reply.NewReplyServiceClient(m.cli.Conn())
 	return client.GetReplies(ctx, in, opts...)
+}
+
+func (m *defaultReplyService) GetReplyNum(ctx context.Context, in *GetReplyNumReq, opts ...grpc.CallOption) (*GetReplyNumResp, error) {
+	client := reply.NewReplyServiceClient(m.cli.Conn())
+	return client.GetReplyNum(ctx, in, opts...)
 }

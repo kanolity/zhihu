@@ -46,4 +46,12 @@ message GetRepliesReply {
 service ReplyService {
   rpc PostReply(PostReplyRequest) returns (PostReplyReply);
   rpc GetReplies(GetRepliesRequest) returns (GetRepliesReply);
+  rpc GetReplyNum(GetReplyNumReq)returns(GetReplyNumResp);
+}
+
+message GetReplyNumReq{
+  int64 article_id =1;
+}
+message GetReplyNumResp{
+  int64 reply_num=1;
 }

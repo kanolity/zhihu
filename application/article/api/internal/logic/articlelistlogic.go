@@ -48,10 +48,12 @@ func (l *ArticleListLogic) ArticleList(req *types.ArticleListRequest) (resp *typ
 			continue
 		}
 		articleInfos = append(articleInfos, types.ArticleInfo{
-			ArticleId: a.Id,
-			Title:     a.Title,
-			TagNames:  tags.TagNames,
-			LikeNum:   a.LikeCount,
+			ArticleId:  a.Id,
+			Title:      a.Title,
+			TagNames:   tags.TagNames,
+			LikeNum:    a.LikeCount,
+			Content:    a.Content,
+			CommentNum: a.CommentCount,
 		})
 	}
 

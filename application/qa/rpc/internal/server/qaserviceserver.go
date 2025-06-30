@@ -42,3 +42,8 @@ func (s *QaServiceServer) GetAnswers(ctx context.Context, in *qa.GetAnswersReque
 	l := logic.NewGetAnswersLogic(ctx, s.svcCtx)
 	return l.GetAnswers(in)
 }
+
+func (s *QaServiceServer) GetQuestions(ctx context.Context, in *qa.GetQuestionsRequest) (*qa.GetQuestionsResponse, error) {
+	l := logic.NewGetQuestionsLogic(ctx, s.svcCtx)
+	return l.GetQuestions(in)
+}

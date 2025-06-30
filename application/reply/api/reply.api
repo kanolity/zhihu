@@ -34,6 +34,12 @@ type (
 		Replies []Reply `json:"replies"`
 		HasMore bool    `json:"has_more"`
 	}
+	GetReplytNumReq {
+		ArticleId int64 `json:"article_id"`
+	}
+	GetReplytNumResp {
+		CommentNum int64 `json:"comment_num"`
+	}
 )
 
 @server (
@@ -46,5 +52,8 @@ service reply-api {
 
 	@handler getReplies
 	get /list (GetRepliesReq) returns (GetRepliesResp)
+
+	@handler getReplyNum
+	get /replynums (GetReplytNumReq) returns (GetReplytNumResp)
 }
 

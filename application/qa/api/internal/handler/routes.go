@@ -34,6 +34,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/question/detail",
 				Handler: getQuestionHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/question/list",
+				Handler: getQuestionsHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/qa"),

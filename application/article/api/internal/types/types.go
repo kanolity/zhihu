@@ -23,11 +23,12 @@ type ArticleDetailResponse struct {
 }
 
 type ArticleInfo struct {
-	ArticleId int64    `json:"article_id"`
-	Title     string   `json:"title"`
-	Content   string   `json:"content"`
-	TagNames  []string `json:"tag_names"`
-	LikeNum   int64    `json:"like_num"`
+	ArticleId  int64    `json:"article_id"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	TagNames   []string `json:"tag_names"`
+	LikeNum    int64    `json:"like_num"`
+	CommentNum int64    `json:"comment_num"`
 }
 
 type ArticleListRequest struct {
@@ -46,21 +47,40 @@ type ArticleListResponse struct {
 }
 
 type ArticleSearchRequest struct {
-	Query     string   `json:"query"`              // 搜索关键字
-	AuthorId  int64    `json:"author_id,optional"` // 可选作者筛选
-	TagNames  []string `json:"tag_names,optional"` // 可选标签筛选
-	Cursor    int64    `json:"cursor,optional"`    // 游标分页，传0表示第一页
-	PageSize  int64    `json:"page_size,optional"` //
-	SortType  int32    `json:"sort_type,optional"` // 0=发布时间(default)，1=点赞数
-	ArticleId int64    `json:"article_id"`         // 当前页最后一条文章ID，配合cursor用作分页
+	Query     string   `form:"query,optional,default="` // 搜索关键字
+	AuthorId  int64    `form:"author_id,optional"`      // 可选作者筛选
+	TagNames  []string `form:"tag_names,optional"`      // 可选标签筛选
+	Cursor    int64    `form:"cursor,optional"`         // 游标分页，传0表示第一页
+	PageSize  int64    `form:"page_size,optional"`      //
+	SortType  int32    `form:"sort_type,optional"`      // 0=发布时间(default)，1=点赞数
+	ArticleId int64    `form:"article_id"`              // 当前页最后一条文章ID，配合cursor用作分页
 }
 
 type ArticleSearchResponse struct {
-	Articles  []ArticleInfo `json:"articles"`
-	Cursor    int64         `json:"cursor"`     // 当前页最后一条排序字段的值
-	ArticleId int64         `json:"article_id"` // 当前页最后一条文章ID，配合cursor用作分页
-	IsEnd     bool          `json:"is_end"`     // 是否到最后一页
-	Total     int64         `json:"total"`      // 搜索命中总数
+	Articles  []ESArticleInfo `json:"articles"`
+	Cursor    int64           `json:"cursor"`     // 当前页最后一条排序字段的值
+	ArticleId int64           `json:"article_id"` // 当前页最后一条文章ID，配合cursor用作分页
+	IsEnd     bool            `json:"is_end"`     // 是否到最后一页
+	Total     int64           `json:"total"`      // 搜索命中总数
+}
+
+type ESArticleInfo struct {
+	ArticleId   int64    `json:"article_id"`
+	Title       string   `json:"title"`
+	Content     string   `json:"content"`
+	Description string   `json:"description"`
+	AuthorId    int64    `json:"author_id"`
+	AuthorName  string   `json:"author_name"`
+	Status      int      `json:"status"`
+	CommentNum  int64    `json:"comment_num"`
+	LikeNum     int64    `json:"like_num"`
+	CollectNum  int64    `json:"collect_num"`
+	ViewNum     int64    `json:"view_num"`
+	ShareNum    int64    `json:"share_num"`
+	TagNames    []string `json:"tag_names"`
+	PublishTime string   `json:"publish_time"`
+	CreateTime  string   `json:"create_time"`
+	UpdateTime  string   `json:"update_time"`
 }
 
 type PendingArticleItem struct {
