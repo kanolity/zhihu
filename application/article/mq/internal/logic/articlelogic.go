@@ -8,7 +8,6 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"go_code/zhihu/application/article/mq/internal/svc"
 	"go_code/zhihu/application/article/mq/internal/types"
-	"go_code/zhihu/application/tag/rpc/types/tag"
 	"go_code/zhihu/application/user/rpc/types/user"
 	"strconv"
 	"strings"
@@ -29,7 +28,7 @@ func NewArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ArticleLo
 	}
 }
 
-func (l *ArticleLogic) Consume(ctx context.Context, key string, val string) error {
+func (l *ArticleLogic) Consume(ctx context.Context, _, val string) error {
 	logx.Infof("Consume msg val: %s", val)
 	var msg *types.CanalArticleMsg
 	err := json.Unmarshal([]byte(val), &msg)
@@ -38,10 +37,10 @@ func (l *ArticleLogic) Consume(ctx context.Context, key string, val string) erro
 		return err
 	}
 
-	return l.articleOperate(l.ctx, msg)
+	return l.articleOperate(msg)
 }
 
-func (l *ArticleLogic) articleOperate(ctx context.Context, msg *types.CanalArticleMsg) error {
+func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 	if len(msg.Data) == 0 {
 		return nil
 	}
@@ -92,13 +91,6 @@ func (l *ArticleLogic) articleOperate(ctx context.Context, msg *types.CanalArtic
 			return err
 		}
 
-		tags, err := l.svcCtx.TagRpc.GetTags(l.ctx, &tag.GetTagsRequest{
-			TagIds: d.TagIds,
-		})
-		if err != nil {
-			l.Logger.Errorf("GetTags userId: %d error: %v", authorId, err)
-			return err
-		}
 		esData = append(esData, &types.ArticleEsMsg{
 			ArticleId:   articleId,
 			AuthorId:    authorId,
@@ -108,10 +100,6 @@ func (l *ArticleLogic) articleOperate(ctx context.Context, msg *types.CanalArtic
 			Description: d.Description,
 			Status:      status,
 			LikeNum:     likNum,
-			TagNames:    tags.TagNames,
-			PublishTime: d.PublishTime,
-			CreateTime:  d.CreateTime,
-			UpdateTime:  d.UpdateTime,
 		})
 	}
 	err := l.BatchUpSertToEs(l.ctx, esData)
@@ -120,10 +108,6 @@ func (l *ArticleLogic) articleOperate(ctx context.Context, msg *types.CanalArtic
 	}
 
 	return err
-}
-
-func articlesKey(uid string, sortType int32) string {
-	return fmt.Sprintf("biz#articles#%s#%d", uid, sortType)
 }
 
 func (l *ArticleLogic) BatchUpSertToEs(ctx context.Context, data []*types.ArticleEsMsg) error {
@@ -153,12 +137,16 @@ func (l *ArticleLogic) BatchUpSertToEs(ctx context.Context, data []*types.Articl
 			OnSuccess: func(ctx context.Context, item esutil.BulkIndexerItem, item2 esutil.BulkIndexerResponseItem) {
 			},
 			OnFailure: func(ctx context.Context, item esutil.BulkIndexerItem, item2 esutil.BulkIndexerResponseItem, err error) {
-				l.Logger.Errorf("BatchUpSertToEs data: %+v error: %v", data, err)
 			},
 		})
 		if err != nil {
 			return err
 		}
 	}
+
 	return bi.Close(ctx)
+}
+
+func articlesKey(uid string, sortType int32) string {
+	return fmt.Sprintf("biz#articles#%s#%d", uid, sortType)
 }

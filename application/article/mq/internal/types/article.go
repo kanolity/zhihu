@@ -31,6 +31,8 @@ type CanalArticleMsg struct {
 		CreateTime  string `json:"create_time"`
 		UpdateTime  string `json:"update_time"`
 	}
+	Old  []map[string]string `json:"old"`
+	Gtid string              `json:"gtid"`
 }
 
 type ArticleEsMsg struct {

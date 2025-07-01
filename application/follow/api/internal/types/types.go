@@ -41,7 +41,7 @@ type FollowListResp struct {
 }
 
 type FollowReq struct {
-	FollowedUserId int64 `json:"followed_userId"` // 被关注者
+	FollowedUserId int64 `json:"followed_user_id"` // 被关注者
 }
 
 type FollowResp struct {

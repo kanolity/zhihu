@@ -16,7 +16,7 @@ type GetRepliesResp struct {
 }
 
 type GetReplytNumReq struct {
-	ArticleId int64 `json:"article_id"`
+	ArticleId int64 `form:"article_id"`
 }
 
 type GetReplytNumResp struct {
