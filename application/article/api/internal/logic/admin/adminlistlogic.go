@@ -28,8 +28,6 @@ func NewAdminListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AdminLi
 
 // AdminList 待审核列表
 func (l *AdminListLogic1) AdminList(req *types.AdminListRequest) (resp *types.AdminListResponse, err error) {
-	// todo: add your logic here and delete this line
-
 	response, err := l.svcCtx.ArticleRpc.GetPendingArticles(l.ctx, &article.AdminListRequest{
 		ArticleId: req.ArticleId,
 		Cursor:    req.Cursor,
@@ -65,5 +63,10 @@ func (l *AdminListLogic1) AdminList(req *types.AdminListRequest) (resp *types.Ad
 			Status:     a.Status,
 		})
 	}
-	return &types.AdminListResponse{}, nil
+	return &types.AdminListResponse{
+		Articles:  items,
+		Cursor:    response.Cursor,
+		ArticleId: response.ArticleId,
+		IsEnd:     response.IsEnd,
+	}, nil
 }

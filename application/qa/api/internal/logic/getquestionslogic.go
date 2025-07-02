@@ -79,7 +79,7 @@ func (l *GetQuestionsLogic) GetQuestions(req *types.GetQuestionsReq) (resp *type
 	}
 
 	return &types.GetQuestionsResp{
-		Qusetions: result,
+		Questions: result,
 		HasMore:   response.HasMore,
 	}, nil
 }

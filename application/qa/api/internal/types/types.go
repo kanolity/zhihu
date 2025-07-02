@@ -67,7 +67,7 @@ type GetQuestionsReq struct {
 }
 
 type GetQuestionsResp struct {
-	Qusetions []GetQuestion `json:"answers"`
+	Questions []GetQuestion `json:"questions"`
 	HasMore   bool          `json:"has_more"`
 }
 

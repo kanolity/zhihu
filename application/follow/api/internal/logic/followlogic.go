@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"go_code/zhihu/application/follow/rpc/followclient"
 
 	"go_code/zhihu/application/follow/api/internal/svc"
@@ -27,6 +28,8 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
 	userId, err := l.ctx.Value("userId").(json.Number).Int64()
+	fmt.Printf("%#v\n", req)
+	fmt.Printf("userid=%d\n", userId)
 	if err != nil {
 		logx.Errorf("get user id from context err:%v", err)
 		return nil, err

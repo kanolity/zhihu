@@ -2,9 +2,9 @@ package logic
 
 import (
 	"context"
-
 	"go_code/zhihu/application/qa/rpc/internal/svc"
 	"go_code/zhihu/application/qa/rpc/types/qa"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,6 +24,12 @@ func NewGetAnswersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAns
 }
 
 func (l *GetAnswersLogic) GetAnswers(in *qa.GetAnswersRequest) (*qa.GetAnswersReply, error) {
+	if in.Cursor == 0 {
+		in.Cursor = time.Now().Unix()
+	}
+	if in.Limit == 0 {
+		in.Limit = 10
+	}
 	list, err := l.svcCtx.AnswerModel.ListByQuestion(l.ctx, in.QuestionId, in.Cursor, in.Limit+1)
 	if err != nil {
 		return nil, err

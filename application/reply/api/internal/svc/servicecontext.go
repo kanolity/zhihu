@@ -6,6 +6,7 @@ import (
 	"go_code/zhihu/application/message/rpc/messageservice"
 	"go_code/zhihu/application/reply/api/internal/config"
 	"go_code/zhihu/application/reply/rpc/replyservice"
+	"go_code/zhihu/application/user/rpc/userclient"
 	"go_code/zhihu/pkg/interceptors"
 )
 
@@ -14,17 +15,20 @@ type ServiceContext struct {
 	ReplyRpc   replyservice.ReplyService
 	MessageRpc messageservice.MessageService
 	ArticleRpc articleclient.Article
+	UserRPC    userclient.User
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	replyRPC := zrpc.MustNewClient(c.ReplyRPC, zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor()))
 	messageRPC := zrpc.MustNewClient(c.MessageRPC, zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor()))
 	articleRPC := zrpc.MustNewClient(c.ArticleRPC, zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor()))
+	userRPC := zrpc.MustNewClient(c.UserRPC, zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor()))
 
 	return &ServiceContext{
 		Config:     c,
 		ReplyRpc:   replyservice.NewReplyService(replyRPC),
 		MessageRpc: messageservice.NewMessageService(messageRPC),
 		ArticleRpc: articleclient.NewArticle(articleRPC),
+		UserRPC:    userclient.NewUser(userRPC),
 	}
 }

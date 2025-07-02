@@ -4,15 +4,17 @@
 package types
 
 type FansItem struct {
-	UserId      int64 `json:"user_id"`
-	FansUserId  int64 `json:"fans_user_id"`
-	FollowCount int64 `json:"follow_count"`
-	FansCount   int64 `json:"fans_count"`
-	CreateTime  int64 `json:"create_time"`
+	UserId       int64  `json:"user_id"`
+	FansUserId   int64  `json:"fans_user_id"`
+	FansUsername string `json:"fans_username"`
+	FansAvatar   string `json:"fans_avatar"`
+	FollowCount  int64  `json:"follow_count"`
+	FansCount    int64  `json:"fans_count"`
+	CreateTime   int64  `json:"create_time"`
 }
 
 type FansListReq struct {
-	Cursor   int64 `form:"cursor"`
+	Cursor   int64 `form:"cursor",optional`
 	PageSize int64 `form:"page_size"`
 }
 
@@ -23,14 +25,16 @@ type FansListResp struct {
 }
 
 type FollowItem struct {
-	Id             int64 `json:"id"`
-	FollowedUserId int64 `json:"followed_user_id"`
-	FansCount      int64 `json:"fans_count"`
-	CreateTime     int64 `json:"create_time"`
+	Id               int64  `json:"id"`
+	FollowedUserId   int64  `json:"followed_user_id"`
+	FollowedUsername string `json:"followed_username"`
+	FollowedAvatar   string `json:"followed_avatar"`
+	FansCount        int64  `json:"fans_count"`
+	CreateTime       int64  `json:"create_time"`
 }
 
 type FollowListReq struct {
-	Cursor   int64 `form:"cursor"`
+	Cursor   int64 `form:"cursor",optional`
 	PageSize int64 `form:"page_size"`
 }
 

@@ -50,19 +50,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				// 审核通过
 				Method:  http.MethodPost,
-				Path:    "/admin/article/approve",
+				Path:    "/approve",
 				Handler: admin.ArticleApproveHandler(serverCtx),
 			},
 			{
 				// 待审核列表
 				Method:  http.MethodGet,
-				Path:    "/admin/article/pending",
+				Path:    "/pending",
 				Handler: admin.AdminListHandler(serverCtx),
 			},
 			{
 				// 驳回文章
 				Method:  http.MethodPost,
-				Path:    "/admin/article/reject",
+				Path:    "/reject",
 				Handler: admin.ArticleLRejectHandler(serverCtx),
 			},
 		},

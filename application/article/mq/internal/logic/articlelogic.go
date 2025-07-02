@@ -42,6 +42,7 @@ func (l *ArticleLogic) Consume(ctx context.Context, _, val string) error {
 
 func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 	if len(msg.Data) == 0 {
+		logx.Infof("msg.Data is empty")
 		return nil
 	}
 
@@ -49,6 +50,8 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 	for _, d := range msg.Data {
 		status, _ := strconv.Atoi(d.Status)
 		likNum, _ := strconv.ParseInt(d.LikeNum, 10, 64)
+		fmt.Println("likeNum:", d.LikeNum)
+		fmt.Println("likNum:", likNum)
 		articleId, _ := strconv.ParseInt(d.ID, 10, 64)
 		authorId, _ := strconv.ParseInt(d.AuthorId, 10, 64)
 
@@ -90,7 +93,10 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 			l.Logger.Errorf("FindById userId: %d error: %v", authorId, err)
 			return err
 		}
-
+		publishTime, _ := time.ParseInLocation("2006-01-02 15:04:05", d.PublishTime, time.Local)
+		createTime, _ := time.ParseInLocation("2006-01-02 15:04:05", d.CreateTime, time.Local)
+		updateTime, _ := time.ParseInLocation("2006-01-02 15:04:05", d.UpdateTime, time.Local)
+		cNum, err := strconv.ParseInt(d.CommentNum, 10, 64)
 		esData = append(esData, &types.ArticleEsMsg{
 			ArticleId:   articleId,
 			AuthorId:    authorId,
@@ -100,9 +106,15 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 			Description: d.Description,
 			Status:      status,
 			LikeNum:     likNum,
+			PublishTime: publishTime.Format("2006-01-02 15:04:05"),
+			CreateTime:  createTime.Format("2006-01-02 15:04:05"),
+			UpdateTime:  updateTime.Format("2006-01-02 15:04:05"),
+			CommentNum:  cNum,
 		})
 	}
+
 	err := l.BatchUpSertToEs(l.ctx, esData)
+	logx.Infof("BatchUpSertToEs esData: %v", esData)
 	if err != nil {
 		l.Logger.Errorf("BatchUpSertToEs data: %v error: %v", esData, err)
 	}
@@ -112,6 +124,7 @@ func (l *ArticleLogic) articleOperate(msg *types.CanalArticleMsg) error {
 
 func (l *ArticleLogic) BatchUpSertToEs(ctx context.Context, data []*types.ArticleEsMsg) error {
 	if len(data) == 0 {
+		fmt.Println("msg.Data is empty")
 		return nil
 	}
 
@@ -126,6 +139,7 @@ func (l *ArticleLogic) BatchUpSertToEs(ctx context.Context, data []*types.Articl
 	for _, d := range data {
 		v, err := json.Marshal(d)
 		if err != nil {
+			fmt.Println("marsh json err :", err, "docId:", d.ArticleId)
 			return err
 		}
 
@@ -135,11 +149,14 @@ func (l *ArticleLogic) BatchUpSertToEs(ctx context.Context, data []*types.Articl
 			DocumentID: fmt.Sprintf("%d", d.ArticleId),
 			Body:       strings.NewReader(payload),
 			OnSuccess: func(ctx context.Context, item esutil.BulkIndexerItem, item2 esutil.BulkIndexerResponseItem) {
+				logx.Infof("ES upsert success: docId=%s", item.DocumentID)
 			},
 			OnFailure: func(ctx context.Context, item esutil.BulkIndexerItem, item2 esutil.BulkIndexerResponseItem, err error) {
+				logx.Errorf("ES upsert fail [ES error]: docId=%s status=%s error=%v", item.DocumentID, item2.Status, item2.Error)
 			},
 		})
 		if err != nil {
+			logx.Errorf("bi.Add error for docId=%s: %v", d.ArticleId, err)
 			return err
 		}
 	}

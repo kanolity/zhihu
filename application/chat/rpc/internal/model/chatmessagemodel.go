@@ -84,7 +84,7 @@ func (m *defaultChatMessageModel) MarkAsReadBatch(ctx context.Context, ids []int
 
 func (m *defaultChatMessageModel) FindLatestMessageBySession(ctx context.Context, sessionId int64) (*ChatMessage, error) {
 	query := fmt.Sprintf(`
-    SELECT id, sender_id, receiver_id, content, send_time, is_read
+    SELECT id, session_id, sender_id, receiver_id, content, msg_type, is_read, send_time
     FROM %s
     WHERE session_id = ?
     ORDER BY send_time DESC

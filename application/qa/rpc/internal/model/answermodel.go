@@ -38,7 +38,7 @@ func (m *defaultAnswerModel) ListByQuestion(ctx context.Context, questionId, cur
 	var query string
 
 	if cursor > 0 {
-		query = fmt.Sprintf("SELECT %s FROM %s WHERE question_id = ? AND id < ? ORDER BY id DESC LIMIT ?", answerRows, m.table)
+		query = fmt.Sprintf("SELECT %s FROM %s WHERE question_id = ? AND UNIX_TIMESTAMP(create_time) < ? ORDER BY id DESC LIMIT ?", answerRows, m.table)
 		args = []interface{}{questionId, cursor, limit}
 	} else {
 		query = fmt.Sprintf("SELECT %s FROM %s WHERE question_id = ? ORDER BY id DESC LIMIT ?", answerRows, m.table)

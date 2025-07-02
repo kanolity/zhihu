@@ -2,9 +2,11 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"go_code/zhihu/application/article/rpc/types/article"
 	"go_code/zhihu/application/message/rpc/types/message"
 	"go_code/zhihu/application/reply/rpc/types/reply"
+	"go_code/zhihu/application/user/rpc/types/user"
 
 	"go_code/zhihu/application/reply/api/internal/svc"
 	"go_code/zhihu/application/reply/api/internal/types"
@@ -47,13 +49,19 @@ func (l *PostReplyLogic) PostReply(req *types.PostReplyReq) (resp *types.PostRep
 			logx.Errorf("increase article[%v] comment count  error: %v", req.TargetId, err)
 		}
 	}
+	replyedUsername, err := l.svcCtx.UserRPC.FindById(l.ctx, &user.FindByIdRequest{
+		UserId: req.ReplyUserId,
+	})
+	if err != nil {
+		logx.Errorf("find user by id error: %v", err)
+	}
 	_, err = l.svcCtx.MessageRpc.SendMessage(l.ctx, &message.SendMessageRequest{
 		Type:       2,
 		BizId:      "reply",
 		TargetId:   req.TargetId,
 		ReceiverId: req.BeReplyUserId,
 		Title:      "收到回复",
-		Content:    req.Content,
+		Content:    fmt.Sprintf("用户%s回复:%s", replyedUsername.Username, req.Content),
 	})
 	if err != nil {
 		logx.Errorf("post reply err:%v", err)

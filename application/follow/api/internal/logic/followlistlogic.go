@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"go_code/zhihu/application/follow/rpc/followclient"
+	"go_code/zhihu/application/user/rpc/types/user"
 
 	"go_code/zhihu/application/follow/api/internal/svc"
 	"go_code/zhihu/application/follow/api/internal/types"
@@ -42,11 +43,18 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 	}
 	items := make([]types.FollowItem, 0, len(response.Items))
 	for _, item := range response.Items {
+		followUser, err := l.svcCtx.UserRpc.FindById(l.ctx, &user.FindByIdRequest{
+			UserId: item.FollowedUserId})
+		if err != nil {
+			return nil, err
+		}
 		newItem := types.FollowItem{
-			Id:             item.Id,
-			FollowedUserId: item.FollowedUserId,
-			FansCount:      item.FansCount,
-			CreateTime:     item.CreateTime,
+			Id:               item.Id,
+			FollowedUserId:   item.FollowedUserId,
+			FollowedUsername: followUser.Username,
+			FollowedAvatar:   followUser.Avatar,
+			FansCount:        item.FansCount,
+			CreateTime:       item.CreateTime,
 		}
 		items = append(items, newItem)
 	}

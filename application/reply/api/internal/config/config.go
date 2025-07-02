@@ -17,4 +17,5 @@ type Config struct {
 	ReplyRPC   zrpc.RpcClientConf
 	MessageRPC zrpc.RpcClientConf
 	ArticleRPC zrpc.RpcClientConf
+	UserRPC    zrpc.RpcClientConf
 }

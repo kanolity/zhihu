@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -12,11 +13,14 @@ import (
 func followListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.FollowListReq
+		fmt.Println("before parse")
 		if err := httpx.Parse(r, &req); err != nil {
+			fmt.Println(err)
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
+		fmt.Println("after parse")
 		l := logic.NewFollowListLogic(r.Context(), svcCtx)
 		resp, err := l.FollowList(&req)
 		if err != nil {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 
 	"go_code/zhihu/application/qa/rpc/internal/svc"
 	"go_code/zhihu/application/qa/rpc/types/qa"
@@ -28,6 +29,9 @@ func NewGetQuestionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetQ
 func (l *GetQuestionsLogic) GetQuestions(in *qa.GetQuestionsRequest) (*qa.GetQuestionsResponse, error) {
 	// 设定 pageSize +1 获取下一页判断
 	limit := in.Limit + 1
+	if in.Cursor == 0 {
+		in.Cursor = time.Now().Unix()
+	}
 
 	// 使用 cursor 和 question_id 实现双重排序分页
 	// 假设是按 create_time + id 倒序（示意）

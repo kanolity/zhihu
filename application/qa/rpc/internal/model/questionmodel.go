@@ -39,27 +39,15 @@ func (m *defaultQuestionModel) ListQuestionsByCursor(ctx context.Context, cursor
 		args      []any
 	)
 
-	if cursorTime == 0 && lastId == 0 {
-		// 首页请求：拉最新
-		query = `
-            SELECT id, user_id, title, description, is_resolved, create_time
+	query = `
+            SELECT id, user_id, title, description, is_resolved, create_time,update_time
             FROM question
+            WHERE (UNIX_TIMESTAMP(create_time)  < ?)
+               OR (UNIX_TIMESTAMP(create_time)  = ? AND id < ?)
             ORDER BY create_time DESC, id DESC
             LIMIT ?
         `
-		args = []any{limit}
-	} else {
-		// 继续分页请求
-		query = `
-            SELECT id, user_id, title, description, is_resolved, create_time
-            FROM question
-            WHERE (UNIX_TIMESTAMP(create_time) * 1000 < ?)
-               OR (UNIX_TIMESTAMP(create_time) * 1000 = ? AND id < ?)
-            ORDER BY create_time DESC, id DESC
-            LIMIT ?
-        `
-		args = []any{cursorTime, cursorTime, lastId, limit}
-	}
+	args = []any{cursorTime, cursorTime, lastId, limit}
 
 	err := m.conn.QueryRowsCtx(ctx, &questions, query, args...)
 	if err != nil {

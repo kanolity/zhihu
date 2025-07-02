@@ -6,6 +6,7 @@ import (
 	"go_code/zhihu/application/follow/api/internal/svc"
 	"go_code/zhihu/application/follow/api/internal/types"
 	"go_code/zhihu/application/follow/rpc/followclient"
+	"go_code/zhihu/application/user/rpc/types/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -41,12 +42,19 @@ func (l *FansListLogic) FansList(req *types.FansListReq) (resp *types.FansListRe
 	}
 	items := make([]types.FansItem, 0, len(response.Items))
 	for _, item := range response.Items {
+		fanUser, err := l.svcCtx.UserRpc.FindById(l.ctx, &user.FindByIdRequest{
+			UserId: item.FansUserId})
+		if err != nil {
+			return nil, err
+		}
 		newItem := types.FansItem{
-			UserId:      item.UserId,
-			FansUserId:  item.FansUserId,
-			FollowCount: item.FollowCount,
-			FansCount:   item.FansCount,
-			CreateTime:  item.CreateTime,
+			UserId:       item.UserId,
+			FansUserId:   item.FansUserId,
+			FansUsername: fanUser.Username,
+			FansAvatar:   fanUser.Avatar,
+			FollowCount:  item.FollowCount,
+			FansCount:    item.FansCount,
+			CreateTime:   item.CreateTime,
 		}
 		items = append(items, newItem)
 	}

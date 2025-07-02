@@ -68,16 +68,27 @@ func (m *customArticleModel) FindPendingArticlesByStatusWithCursor(
 	lastId int64,
 	limit int64,
 ) ([]*Article, error) {
-
-	query := fmt.Sprintf(`
+	var query string
+	var articles []*Article
+	var err error
+	if lastId == 0 {
+		query = fmt.Sprintf(`
         SELECT %s FROM %s 
         WHERE status = ? 
-        AND (publish_time < ? OR (publish_time = ? AND id < ?)) 
+        AND UNIX_TIMESTAMP(publish_time) < ?
         ORDER BY publish_time DESC, id DESC 
         LIMIT ?`, articleRows, m.table)
+		err = m.QueryRowsNoCacheCtx(ctx, &articles, query, status, cursorTime, limit)
+	} else {
+		query = fmt.Sprintf(`
+        SELECT %s FROM %s 
+        WHERE status = ? 
+        AND (UNIX_TIMESTAMP(publish_time) < ? OR (UNIX_TIMESTAMP(publish_time) = ? AND id < ?)) 
+        ORDER BY publish_time DESC, id DESC 
+        LIMIT ?`, articleRows, m.table)
+		err = m.QueryRowsNoCacheCtx(ctx, &articles, query, status, cursorTime, cursorTime, lastId, limit)
+	}
 
-	var articles []*Article
-	err := m.QueryRowsNoCacheCtx(ctx, &articles, query, status, cursorTime, cursorTime, lastId, limit)
 	if err != nil {
 		return nil, err
 	}

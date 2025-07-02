@@ -39,7 +39,7 @@ func (l *FindByMobileLogic) FindByMobile(in *user.FindByMobileRequest) (*user.Fi
 	}
 
 	return &user.FindByMobileResponse{
-		UserId:   int64(user1.Id),
+		UserId:   user1.Id,
 		Username: user1.Username,
 		Avatar:   user1.Avatar,
 	}, nil

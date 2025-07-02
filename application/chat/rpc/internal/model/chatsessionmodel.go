@@ -45,11 +45,11 @@ func (m *defaultChatSessionModel) FindByUserPair(ctx context.Context, user1Id, u
 }
 func (m *defaultChatSessionModel) FindUserSessions(ctx context.Context, userId int64, cursor int64, limit int) ([]*ChatSession, error) {
 	query := fmt.Sprintf(`
-        SELECT id, user1, user2, updated_at
+        SELECT id, user1_id, user2_id, create_time
         FROM %s
-        WHERE (user1 = ? OR user2 = ?)
+        WHERE (user1_id = ? OR user2_id = ?)
         %s
-        ORDER BY updated_at DESC
+        ORDER BY create_time DESC
         LIMIT ?
     `, m.table,
 		func() string {
